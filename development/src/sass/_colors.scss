@@ -1,0 +1,282 @@
+.market a,
+.yellow,
+.tdbitcoin {
+    color: $btcColor;
+}
+
+.buy-strategy,
+.sell-strategy {
+    color: #7bbbff;
+  }
+
+.current-value,
+.text-profitlw {
+    color: rgba(255, 215, 0, 0.75);
+  }
+
+.buy-value,
+.trigger,
+.tdgreen {
+    color: #6CB46C;
+  }
+
+.blue-color,
+.sold-value,
+.sold-price {
+    color: #add8e6;
+  }
+  .profit-classtext {
+    color: rgb(5, 177, 111);
+  }
+  .loss-classtext {
+    color: rgb(216, 83, 83);
+  }
+
+  .sold-amount {
+    color: #86d6d6;
+  }
+
+  .badge-primary {
+    color: #fff;
+    background-color: $color-primary;
+    border-color: $color-primary;
+  }
+
+
+
+  .text-warning {
+    color: #ffaa00 !important;
+  }
+
+  .text-success {
+    color: $teal !important;
+  }
+  .text-btctrend {
+    color: rgba(65, 222, 205, 0.75);
+  }
+  .text-danger {
+    color: $red;
+  }
+  .text-btcusd, .coin-market-text, .text-trend1h, .text-trend24h, .text-trend7d {
+    color: rgba(133, 187, 101, 0.75);
+  }
+
+  .top-market .counter, .global-market .counter {
+    color: #98a6ad;
+  }
+
+  .text-profittd {
+    color: rgba(255, 128, 114, 0.75);
+  }
+
+  .red {
+    color: #FF5B60;
+  }
+
+
+  .badge-light-primary {
+    background-color: rgba(59,175,218,.2);
+    color: $color-primary!important
+  }
+
+  .badge-light-secondary {
+    background-color: rgba(93,111,129,.2);
+    color: #5d6f81!important
+  }
+
+  .badge-light-success {
+    background-color: rgba(26,188,156,.2);
+    color: $teal!important
+  }
+
+  .badge-light-info {
+    background-color: rgba(55,205,230,.2);
+    color: #37cde6!important
+  }
+
+  .badge-light-warning {
+    background-color: rgba(247,184,75,.2);
+    color: #f7b84b!important
+  }
+
+  .badge-light-danger {
+    background-color: rgba(241,85,108,.2);
+    color: #f1556c!important
+  }
+
+  .badge-light-light {
+    background-color: rgba(73,85,97,.2);
+    color: #495561!important
+  }
+
+  .badge-light-dark {
+    background-color: rgba(138,146,154,.2);
+    color: #8a929a!important
+  }
+
+  .badge-light-pink {
+    background-color: rgba(246,114,167,.2);
+    color: #f672a7!important
+  }
+
+  .badge-light-purple {
+    background-color: rgba(101,89,204,.2);
+    color: #6559cc!important
+  }
+
+  .bg-soft-primary {
+    background-color: rgba(59,175,218,.25)!important
+  }
+
+  .bg-soft-secondary {
+    background-color: rgba(93,111,129,.25)!important
+  }
+
+  .bg-soft-success {
+    background-color: rgba(26,188,156,.25)!important
+  }
+
+  .bg-soft-info {
+    background-color: rgba(55,205,230,.25)!important
+  }
+
+  .bg-soft-warning {
+    background-color: rgba(247,184,75,.25)!important
+  }
+
+  .bg-soft-danger {
+    background-color: rgba(241,85,108,.25)!important
+  }
+
+  .bg-soft-light {
+    background-color: rgba(73,85,97,.25)!important
+  }
+
+  .bg-soft-dark {
+    background-color: rgba(138,146,154,.25)!important
+  }
+
+  .bg-soft-pink {
+    background-color: rgba(246,114,167,.25)!important
+  }
+
+  .bg-soft-purple {
+    background-color: rgba(101,89,204,.25)!important
+  }
+
+
+  .red {
+    color: #FF5B60;
+  }
+
+  .badge-success {
+    background-color: rgb(12, 133, 87);
+  }
+
+  .badge-danger {
+    background-color: $red;
+  }
+
+  .badge-light-primary {
+    background-color: rgba(59,175,218,.2);
+    color: $color-primary!important
+  }
+
+  .badge-light-secondary {
+    background-color: rgba(93,111,129,.2);
+    color: #5d6f81!important
+  }
+
+  .badge-light-success {
+    background-color: rgba(26,188,156,.2);
+    color: $teal!important
+  }
+
+  .badge-light-info {
+    background-color: rgba(55,205,230,.2);
+    color: #37cde6!important
+  }
+
+  .badge-light-warning {
+    background-color: rgba(247,184,75,.2);
+    color: #f7b84b!important
+  }
+
+  .badge-light-danger {
+    background-color: rgba(241,85,108,.2);
+    color: $red;
+  }
+
+  .badge-light-light {
+    background-color: rgba(73,85,97,.2);
+    color: #495561!important
+  }
+
+  .badge-light-dark {
+    background-color: rgba(138,146,154,.2);
+    color: #8a929a!important
+  }
+
+  .badge-light-pink {
+    background-color: rgba(246,114,167,.2);
+    color: #f672a7!important
+  }
+
+  .badge-light-purple {
+    background-color: rgba(101,89,204,.2);
+    color: #6559cc!important
+  }
+
+  .bg-soft-primary {
+    background-color: rgba(59,175,218,.25)!important
+  }
+
+  .bg-soft-secondary {
+    background-color: rgba(93,111,129,.25)!important
+  }
+
+  .bg-soft-success {
+    background-color: rgba(26,188,156,.25)!important
+  }
+
+  .bg-soft-info {
+    background-color: rgba(55,205,230,.25)!important
+  }
+
+  .bg-soft-warning {
+    background-color: rgba(247,184,75,.25)!important
+  }
+
+  .bg-soft-danger {
+    background-color: rgba(241,85,108,.25)!important
+  }
+
+  .bg-soft-light {
+    background-color: rgba(73,85,97,.25)!important
+  }
+
+  .bg-soft-dark {
+    background-color: rgba(138,146,154,.25)!important
+  }
+
+  .bg-soft-pink {
+    background-color: rgba(246,114,167,.25)!important
+  }
+
+  .bg-soft-purple {
+    background-color: rgba(101,89,204,.25)!important
+  }
+
+
+  .text-success {
+    color: $teal !important;
+  }
+  .text-btctrend {
+    color: rgba(65, 222, 205, 0.75);
+  }
+  .text-danger {
+    color: $red;
+  }
+  .text-btcusd, .coin-market-text, .text-trend1h, .text-trend24h, .text-trend7d {
+    color: rgba(133, 187, 101, 0.75);
+  }
