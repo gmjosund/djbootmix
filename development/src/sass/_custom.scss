@@ -1,0 +1,450 @@
+$btcColor: #FF9900;
+$color-primary: #3bafda;
+
+body {
+    margin-top: 75px;
+    margin-bottom: 75px;
+    background-color: #323b44;
+    color: #98a6ad;
+  }
+
+  .card {
+    background-color: #36404a;
+  }
+
+  .table {
+    color: #98a6ad;
+  }
+
+
+  .table-bordered, .table-bordered td, .table-bordered th {
+    border-color: #434f5c !important;
+  }
+
+
+  .text-white {
+    color: $code-color;
+  }
+
+
+  td .badge {
+    width: 60px;
+    font-weight: normal;
+    font-size: inherit !important;
+  }
+
+
+
+  body .monitor-smaller-fonts {
+    font-size: 0.85em !important;
+  }
+  .m-t-10 {
+    margin-top: 10px !important;
+  }
+  .text-primary {
+    color: $color-primary !important;
+  }
+
+  .monitoring .card {
+    margin-bottom: 0px;
+    height: 100%;
+  }
+
+
+  .top-market .counter, .top-market .market-label {
+    display: block;
+  }
+  .top-market {
+    display: inline-block;
+  }
+  .global-market .counter {
+    display: block;
+  }
+
+  .global-market .market-label {
+    font-size: 16px;
+  }
+  .profit-heading {
+    white-space: nowrap;
+  }
+
+  .profit-heading .main-text {
+    display: inline-block;
+  }
+
+
+  @media screen and (max-width: 1999px) {
+    .totals-text {
+      font-size: 13px !important;
+    }
+  }
+  .text-dark {
+    color: #ffffff !important;
+  }
+  .summary-table td {
+    padding: 5px;
+  }
+  .buy-strategy, .sell-strategy, .table-nowrap {
+    white-space: nowrap;
+  }
+  .summary-table tr td:nth-child(2) {
+    text-align: right;
+  }
+  .percentage {
+    margin-right: 10px;
+  }
+  .summary-table {
+    margin-top: 10px;
+  }
+  .summary-table tr:first-child {
+    color: #FF6666;
+  }
+  .summary-table tr {
+    color: #6CB46C;
+    padding: 10px;
+  }
+  .summary-table tr td:first-child {
+    font-weight: bold;
+  }
+  .summary-table tr {
+    border-top: 1px solid #434f5c;
+  }
+  .summary-table tr:last-child {
+    border-bottom: 1px solid #434f5c;
+  }
+  .summary-table .current-currency-values {
+    min-width: 90px;
+    display: inline-block;
+  }
+  #marketDataContainer .top-market-labels {
+    font-weight: bolder;
+    color: #98a6ad !important;
+  }
+  #marketDataContainer .top-market-labels > *,
+  #marketDataContainer .top-market-prices > *,
+  #marketDataContainer .top-market-perc > * {
+    margin-bottom: 2px;
+    margin-top: 2px;
+  }
+  #marketDataContainer .top-market-prices > * {
+    font-weight: bolder;
+    color: #ffffff !important;
+  }
+  #marketDataContainer .top-market-perc > *{
+    font-size: 1rem !important;
+  }
+
+  @media (max-width: 419px) {
+    body {
+      margin-bottom: 0px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .container-fluid {
+      max-width: 90%;
+    }
+  }
+  .container-fluid {
+      width: 100%;
+      padding-right: 12px;
+      padding-left: 12px;
+      margin-right: auto;
+      margin-left: auto;
+  }
+  #topnav {
+    background: #38414a;
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 1001;
+    padding: 0 12px;
+    border-bottom: 1px solid #3f4953;
+    -webkit-box-shadow: 0 0 15px 0 rgba(40,48,55,.6);
+    box-shadow: 0 0 15px 0 rgba(40,48,55,.6);
+  }
+  #app > .container-fluid{
+    padding-top: 40px;
+  }
+
+
+  body {
+    margin-top: 75px;
+    margin-bottom: 75px;
+    background-color: #323b44;
+    color: #98a6ad;
+  }
+
+  .card,
+  .dropdown-menu {
+    background-color: #36404a;
+  }
+
+  .table {
+    color: #98a6ad;
+  }
+
+
+
+  .table-bordered, .table-bordered td, .table-bordered th {
+    border-color: #434f5c !important;
+  }
+
+  .records-count {
+    margin-left: 5px;
+    min-width: 30px;
+    display: inline-block;
+    color: #fff !important;
+  }
+
+  .bg-icon {
+    height: 80px;
+    width: 80px;
+    text-align: center;
+    border-radius: 50%;
+  }
+  .bg-icon i {
+    font-size: 40px;
+    line-height: 68px;
+  }
+  .icon-tdbitcoin {
+    color:$btcColor;
+  }
+  .icon-primary {
+    color: $color-primary;
+  }
+  .icon-success {
+    color: $teal;
+  }
+  .icon-btcusd, .icon-trend1h, .icon-trend24h, .icon-trend7d {
+    color: $teal;
+  }
+  .icon-profitlw {
+    color: rgba(255, 215, 0, 0.75);
+  }
+  .icon-profityd {
+    color: rgba(176, 196, 222, 0.75);
+  }
+  .icon-profittd {
+    color: rgba(255, 128, 114, 0.75);
+  }
+  .icon-inverse {
+    color: rgba(76, 86, 103, 0.75);
+  }
+  .icon-pairs, .icon-dca, .icon-pending, .icon-sales {
+    color: rgba(223, 229, 224, 0.75);
+  }
+
+
+  .market a,
+  .yellow {
+    color: #FF9900;
+  }
+
+  .buy-strategy,
+  .sell-strategy {
+    color: #7bbbff;
+  }
+
+  .current-value {
+    color: rgba(255, 215, 0, 0.75);
+  }
+
+  .buy-value {
+    color: #6CB46C;
+  }
+
+  .blue-color {
+    color: #add8e6;
+  }
+  .profit-classtext {
+    color: rgb(5, 177, 111);
+  }
+  .loss-classtext {
+    color: rgb(216, 83, 83);
+  }
+  .trigger {
+    color: #6CB46C;
+  }
+  .tdgreen {
+    color: #6CB46C;
+  }
+  .sold-amount {
+    color: #86d6d6;
+  }
+  .sold-value, .sold-price {
+    color: #add8e6;
+  }
+
+  .badge-primary {
+    color: #fff;
+    background-color: $color-primary;
+    border-color: $color-primary;
+  }
+  .records-count {
+    margin-left: 5px;
+    min-width: 30px;
+    display: inline-block;
+    color: #fff !important;
+  }
+
+
+  td .badge {
+    width: 60px;
+    font-weight: normal;
+    font-size: inherit !important;
+  }
+
+  .tdbitcoin {
+    color: $btcColor;
+  }
+  .text-warning {
+    color: #ffaa00 !important;
+  }
+
+  body .monitor-smaller-fonts {
+    font-size: 0.85em !important;
+  }
+  .m-t-10 {
+    margin-top: 10px !important;
+  }
+  .text-primary {
+    color: $color-primary !important;
+  }
+
+  .monitoring .card {
+    margin-bottom: 0px;
+    height: 100%;
+  }
+  .small-text {
+    font-size: 15px;
+  }
+
+  .top-market .counter, .top-market .market-label {
+    display: block;
+  }
+  .font-bold {
+    font-weight: bold;
+  }
+  .top-market {
+    display: inline-block;
+  }
+  .global-market .counter {
+    display: block;
+  }
+  .top-market .counter, .global-market .counter {
+    color: #98a6ad;
+  }
+  .global-market .market-label {
+    font-size: 16px;
+  }
+  .profit-heading {
+    white-space: nowrap;
+  }
+  .text-profitlw {
+    color: rgba(255, 215, 0, 0.75);
+  }
+  .profit-heading .main-text {
+    display: inline-block;
+  }
+
+  .text-profittd {
+    color: rgba(255, 128, 114, 0.75);
+  }
+  @media screen and (max-width: 1999px) {
+    .totals-text {
+      font-size: 13px !important;
+    }
+  }
+  .text-dark {
+    color: #ffffff !important;
+  }
+  .summary-table td {
+    padding: 5px;
+  }
+  .buy-strategy, .sell-strategy, .table-nowrap {
+    white-space: nowrap;
+  }
+  .summary-table tr td:nth-child(2) {
+    text-align: right;
+  }
+  .percentage {
+    margin-right: 10px;
+  }
+  .summary-table {
+    margin-top: 10px;
+  }
+  .summary-table tr:first-child {
+    color: #FF6666;
+  }
+  .summary-table tr {
+    color: #6CB46C;
+    padding: 10px;
+  }
+  .summary-table tr td:first-child {
+    font-weight: bold;
+  }
+  .summary-table tr {
+    border-top: 1px solid #434f5c;
+  }
+  .summary-table tr:last-child {
+    border-bottom: 1px solid #434f5c;
+  }
+  .summary-table .current-currency-values {
+    min-width: 90px;
+    display: inline-block;
+  }
+
+
+  @media (max-width: 419px) {
+    body {
+      margin-bottom: 0px;
+    }
+  }
+  @media (min-width: 1200px) {
+    .container-fluid {
+      max-width: 95%;
+    }
+  }
+  .container-fluid {
+      width: 100%;
+      padding-right: 12px;
+      padding-left: 12px;
+      margin-right: auto;
+      margin-left: auto;
+  }
+  #topnav {
+    background: #38414a;
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 1001;
+    padding: 0 12px;
+    border-bottom: 1px solid #3f4953;
+    -webkit-box-shadow: 0 0 15px 0 rgba(40,48,55,.6);
+    box-shadow: 0 0 15px 0 rgba(40,48,55,.6);
+  }
+  #app > .container-fluid{
+    padding-top: 40px;
+  }
+  .h3, h3 {
+    font-size: 24px;
+  }
+
+  .h4, h4 {
+    font-size: 18px;
+  }
+
+  .h5, h5 {
+    font-size: 14px;
+  }
+
+  .h6, h6 {
+    font-size: 12px;
+  }
+
+
+ td .badge {
+    width: 60px;
+    font-weight: normal;
+    font-size: inherit !important;
+}
