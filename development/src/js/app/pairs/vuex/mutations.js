@@ -6,8 +6,8 @@ export const setPairsLog = (state, data) => {
   let boughtCost = 0
 
   data.forEach(element => {
-    currentValue = (parseFloat(currentValue) + (parseFloat(element.currentValue) - (parseFloat(element.currentValue) * (element.fee / 100))))
-    boughtCost = (parseFloat(boughtCost) + (parseFloat(element.totalCost)))
+    currentValue = (parseFloat(currentValue) + (parseFloat(element.currentValue) - (parseFloat(element.currentValue) * (element.fee / 100)))).toFixed(element.pricePrecision)
+    boughtCost = (parseFloat(boughtCost) + (parseFloat(element.totalCost))).toFixed(element.pricePrecision)
   })
 
   state.calculations.currentValue = currentValue

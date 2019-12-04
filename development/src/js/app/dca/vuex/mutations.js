@@ -6,8 +6,8 @@ export const setDcaLog = (state, data) => {
   let totalCost = 0
 
   data.forEach(element => {
-    currentValue = (parseFloat(currentValue) + (parseFloat(element.currentValue) - (parseFloat(element.currentValue) * (element.fee / 100))))
-    totalCost = (parseFloat(totalCost) + (parseFloat(element.totalCost)))
+    currentValue = (parseFloat(currentValue) + (parseFloat(element.currentValue) - (parseFloat(element.currentValue) * (element.fee / 100)))).toFixed(element.pricePrecision)
+    totalCost = (parseFloat(totalCost) + (parseFloat(element.totalCost))).toFixed(element.pricePrecision)
   })
 
   state.calculations.currentValue = currentValue

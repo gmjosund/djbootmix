@@ -337,3 +337,58 @@ export const PT_LINKS = {
     text: 'sidebar.config'
   },
 };
+
+export const DEFAULT_COMPONENTS_LIST = [
+  {
+    component: 'balance',
+    visibility: true
+  },
+  {
+    component: 'tcv',
+    visibility: true
+  },
+  {
+    component: 'startBalance',
+    visibility: true
+  },
+  {
+    component: 'btcTrend',
+    visibility: true
+  },
+  {
+    component: 'totalMarketCap',
+    visibility: true
+  },
+  {
+    component: 'profitLastWeek',
+    visibility: true
+  },
+  {
+    component: 'profitToday',
+    visibility: true
+  },
+  {
+    component: 'profitYesterday',
+    visibility: true
+  },
+  {
+    component: 'somo',
+    visibility: true
+  },
+  {
+    component: 'pairsLog',
+    visibility: true
+  },
+  {
+    component: 'dcaLog',
+    visibility: true
+  },
+  {
+    component: 'pendingLog',
+    visibility: true
+  },
+  {
+    component: 'salesLog',
+    visibility: true
+  }
+];

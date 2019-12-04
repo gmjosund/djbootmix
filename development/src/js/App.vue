@@ -49,7 +49,6 @@ export default {
       getBuysData: 'buys/getBuysLog',
       getSalesData: 'sales/getSalesLog',
       getDustData: 'dust/getDustLog',
-      getCurrencies: 'monitoring/getCurrencies',
       // getBuyLog: 'buys/getBuyLog',
       // getSalesLog: 'sales/getSalesLog',
     }),
@@ -65,6 +64,7 @@ export default {
       return axios.get(`https://api.coingecko.com/api/v3/global`).then((response) => {
         let serverMarket = this.misc.hasOwnProperty('market') ? this.misc.market.toLowerCase() : 'btc';
         $('.dial#globalMarketChangePercentage').val(response.data.data.market_cap_percentage[serverMarket].toFixed(2)).change();
+        this.$store.commit('monitoring/setGlobalMarketCapPercentage', response.data.data.market_cap_percentage[serverMarket].toFixed(2));
         this.$store.commit('monitoring/setGlobalMarketCapData', response.data.data);
       })
     },
@@ -78,7 +78,6 @@ export default {
       this.getBuysData()
       this.getSalesData()
       this.getDustData()
-      this.getCurrencies()
       //this.getApiLogs();
       this.getMarketTrends();
       if (!this.marketCapTimeout) {
@@ -100,4 +99,3 @@ export default {
   },
 }
 </script>
-

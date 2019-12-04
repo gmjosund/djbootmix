@@ -3,7 +3,7 @@ import $ from 'jquery';
 import 'timeago';
 
 import { DEFAULT_PRECISION, DEFAULT_VALUE,
-  POSITIVE_CLASS_TEXT, NEGATIVE_CLASS_TEXT, BASE_CURRENCY, CURRENCY_SYMBOLS, BASE_CURRENCY_SYMBOL, BASE_CURRENCY_NAME } from './helpers/constants';
+  POSITIVE_CLASS_TEXT, NEGATIVE_CLASS_TEXT } from './helpers/constants';
 
 Vue.filter('normalizeValueWithComma', (valToFormat, precision) => {
   // To normalize numerical data by adding commas and precision based on parameters.
@@ -64,31 +64,6 @@ Vue.filter('getValueInCurrentCurrency', (valToFormat, data, precision) => {
     }
   }
   return valueStr;
-});
-
-Vue.filter('normalizeCurrencies', (data, currencies) => {
-  var currentCurrency = data.currency;
-  var isBaseCurrency =
-    currentCurrency && currencies.hasOwnProperty(currentCurrency)
-      ? false
-      : true;
-  data.currency = isBaseCurrency
-    ? BASE_CURRENCY
-    : currentCurrency;
-  data.currencyValue = isBaseCurrency
-    ? 1 
-    : currencies[currentCurrency];
-  if (
-    !isBaseCurrency &&
-    CURRENCY_SYMBOLS.hasOwnProperty(currentCurrency)
-  ) {
-    data.currencySymbol = CURRENCY_SYMBOLS[currentCurrency].symbol;
-    data.currencyName = CURRENCY_SYMBOLS[currentCurrency].name;
-  } else {
-    data.currencySymbol = BASE_CURRENCY_SYMBOL;
-    data.currencyName =  BASE_CURRENCY_NAME;
-  }
-  return data;
 });
 
 Vue.filter('checkAndAddPrecision', (data, precision) => {

@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { TIMERS, API_URLS } from '../../../helpers/constants';
 
 export const getData = ({commit, dispatch}, context) => {
   return axios.get(THE_BASE_URL + '/monitoring/data').then((response) => {
@@ -46,44 +45,6 @@ export const getApiLogs = ({dispatch}) => {
     dispatch('apiLogs/getApiLogs', response.data, {root:true})
   })
 }
-
-export const getCurrencies = ({ commit, dispatch }) => {
-  var currenciesLocalStorageKey = 'currencies';
-  var currenciesAPICalledTimeLocalStorageKey = 'currenciesAPICalledTime';
-  var currenciesTmp = localStorage.getItem(currenciesLocalStorageKey);
-  var currenciesAPICalledTime = +localStorage.getItem(
-    currenciesAPICalledTimeLocalStorageKey
-  );
-  var currentEpochTime = new Date().getTime();
-
-  // Check local storage has currencies value and currencies API called time,
-  // if above two values are there and currencies API called time didn't cross 24 hours then consider local storages values.
-  if (currenciesTmp && currenciesAPICalledTime) {
-    if (
-      currentEpochTime - currenciesAPICalledTime <
-      TIMERS.CURRENCY_API_CALL_FREQUENCY
-    ) {
-      commit('setCurrencies', currenciesTmp);
-      return;
-    }
-  }
-  return axios
-    .get(API_URLS.CURRENCIES_API_URL)
-    .then(response => {
-      localStorage.setItem(
-        currenciesLocalStorageKey,
-        JSON.stringify(response.data)
-      );
-      localStorage.setItem(
-        currenciesAPICalledTimeLocalStorageKey,
-        currentEpochTime
-      );
-      commit('setCurrencies', response.data);
-    })
-    .catch(error => {})
-    .finally(() => {
-    });
-};
 
 export const getMarketTrends = ({commit, dispatch}) => {
   return axios.get(THE_BASE_URL + '/private?command=returnTicker').then((response) => {

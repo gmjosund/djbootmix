@@ -267,6 +267,38 @@
           </li>
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto list-inline">
+          <li id="addWidgetsContainer"
+            class="dropdown d-none d-lg-block list-inline-item notification-list"
+          >
+            <a class="nav-link dropdown-toggle mr-0 waves-effect waves-light"
+              data-toggle="dropdown"
+              href="#"
+              role="button"
+              aria-haspopup="false"
+              aria-expanded="false"
+            >
+              <i class="mdi mdi-library-plus noti-feed-icon feed-icon"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right animate slideIn">
+              <div class="dropdown-item noti-title">
+                <h5 class="m-0 font-16">
+                  Cards
+                </h5>
+              </div>
+              <div class="dropdown-item notify-item"
+                   v-if="items.length === 0">
+                  All cards are added.
+              </div>
+              <div class="dropdown-item notify-item"
+                v-for="item in items"
+                v-bind:key="items[item]"
+                v-bind:id="item.component"
+                v-on:click="addComponent"
+                >
+                  {{item["component"].toUpperCase()}}
+                </div>
+            </div>
+          </li>
           <li class="dropdown d-none d-lg-block list-inline-item"
             id="languageDropdown"
           >
@@ -419,7 +451,11 @@
 <script>
   import {mapActions, mapGetters } from 'vuex'
   export default {
-
+    data() {
+      return {
+        items: [],
+      }
+    },
     computed: {
       ...mapGetters({
         possibleBuysAmount: 'possibleBuys/possibleBuysAmount',
@@ -470,7 +506,33 @@
           }
         }
       },
+      addComponent(event) {
+        var cardToAdd = event.target.id;
+        var cardIndex = null;
+        for (var item in this.items){
+          if (this.items[item].component === cardToAdd){
+            cardIndex = item;
+          }
+        }
+        this.items.splice(cardIndex,1);
+        this.$root.$emit('addCardsTOMonitoring', cardToAdd);
+      }
     },
+    mounted() {
+      var componentList = localStorage.getItem('component_list') ? JSON.parse(localStorage.getItem('component_list')) : '' ; 
+      if(componentList){
+        var removedComponents = componentList.filter(obj => {
+          return obj.visibility === false;
+        })
+      }
+      this.items = removedComponents;
+      this.$root.$on('addComponentsToDropdown',(item) => {
+        this.items.push(item);
+      });
+    },
+    beforeDestroy() {
+      this.$root.$off('addComponentsToDropdown');
+    }
   }
 </script>
 
@@ -592,6 +654,7 @@
 #newDropdownContainer [data-toggle="dropdown"],
 #appNotificationContainer [data-toggle="dropdown"],
 #signalFeedContainer [data-toggle="dropdown"],
+#addWidgetsContainer [data-toggle="dropdown"],
 .sidebar-settings #settingsLink {
   padding: 0px;
   cursor: pointer;

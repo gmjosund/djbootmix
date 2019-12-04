@@ -45,6 +45,6 @@ export const globalMarketCap = (state) => {
   return state.globalMarketCap
 }
 
-export const currencies = (state) => {
-  return state.currencies
+export const globalMarketCapPercentage = (state) => {
+  return state.globalMarketCapPercentage
 }

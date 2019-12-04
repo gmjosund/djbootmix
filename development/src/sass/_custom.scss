@@ -448,3 +448,75 @@ body {
     font-weight: normal;
     font-size: inherit !important;
 }
+
+.vue-grid-placeholder {
+  background: none !important;
+}
+
+@media screen and (max-width: 1366px) {
+  .bg-icon {
+     height: 40px !important;
+     width: 40px !important;
+     text-align: center;
+     border-radius: 50%;
+   }
+   .text-right {
+     font-size: 14px !important;
+   }
+   #totalMarketCap+p canvas {
+     width: 50.54px !important;
+     height: 50.54px !important
+   }
+   #globalMarketChangePercentage {
+     width: 96px !important;
+     height: 12px !important;
+     margin-top: 8px !important;
+     margin-left: -22px !important;
+     font: bold 14px Arial !important;
+     top: 12px;
+   }
+ }
+ 
+ @media screen and (max-width: 1366px) and (orientation: landscape){
+   .bg-icon {
+      height: 40px !important;
+      width: 40px !important;
+      text-align: center;
+      border-radius: 50%;
+    }
+    .text-right {
+      font-size: 14px !important;
+    }
+    #totalMarketCap+p canvas {
+      width: 50.54px !important;
+      height: 50.54px !important
+    }
+    #globalMarketChangePercentage {
+      width: 96px !important;
+      height: 12px !important;
+      margin-top: 8px !important;
+      margin-left: -22px !important;
+      font: bold 14px Arial !important;
+      top: 12px;
+    }
+  }
+ 
+ @media screen and (max-width: 840px){
+  .bg-icon {
+     height: 40px !important;
+     width: 40px !important;
+     text-align: center;
+     border-radius: 50%;
+   }
+   .text-right {
+     font-size: 11px !important;
+   }
+   .card-body {
+     padding-right: 10px;
+     padding-left: 10px;
+   }
+ }
+ 
+ @media screen and (min-width: 1800px){
+ 
+  }
