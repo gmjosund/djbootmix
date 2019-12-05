@@ -10,5 +10,5 @@ export default {
   isAPICallInProgress: true,
   marketCap: {},
   globalMarketCap: {},
-  currencies: []
+  globalMarketCapPercentage: null
 }

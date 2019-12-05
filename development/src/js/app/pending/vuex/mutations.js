@@ -6,8 +6,8 @@ export const setPendingLog = (state, data) => {
   let targetValue = 0
 
   data.forEach(element => {
-    targetValue = (parseFloat(targetValue) + parseFloat(element.totalCost))
-    currentValue = (parseFloat(currentValue) + (parseFloat(element.currentValue)))
+    targetValue = (parseFloat(targetValue) + parseFloat(element.totalCost)).toFixed(element.pricePrecision)
+    currentValue = (parseFloat(currentValue) + (parseFloat(element.currentValue))).toFixed(element.pricePrecision)
   })
 
   state.calculations.currentValue = currentValue

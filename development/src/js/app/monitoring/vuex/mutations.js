@@ -55,6 +55,6 @@ export const setGlobalMarketCapData = (state, data) => {
   state.globalMarketCap = data
 }
 
-export const setCurrencies = (state, data) => {
-  state.currencies = data
+export const setGlobalMarketCapPercentage = (state, data) => {
+  state.globalMarketCapPercentage = data
 }
