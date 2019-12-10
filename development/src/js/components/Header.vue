@@ -286,7 +286,7 @@
                 </h5>
               </div>
               <div class="dropdown-item notify-item"
-                   v-if="items.length === 0">
+                   v-if="showMsg()">
                   All cards are added.
               </div>
               <div class="dropdown-item notify-item"
@@ -506,6 +506,13 @@
           }
         }
       },
+      showMsg (){
+        if (this.items && this.items.length === 0){
+          return true;
+        }else {
+          return false;
+        }
+      },
       addComponent(event) {
         var cardToAdd = event.target.id;
         var cardIndex = null;
@@ -525,7 +532,9 @@
           return obj.visibility === false;
         })
       }
-      this.items = removedComponents;
+      if (removedComponents){
+        this.items = removedComponents;
+      }
       this.$root.$on('addComponentsToDropdown',(item) => {
         this.items.push(item);
       });
