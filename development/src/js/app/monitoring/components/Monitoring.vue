@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid" v-bind:style = styles>
+  <div class="main">
      <grid-layout
             :layout.sync="layout"
             :row-height="20"

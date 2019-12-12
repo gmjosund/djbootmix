@@ -442,6 +442,26 @@ body {
     font-size: 12px;
   }
 
+  .w-250 {
+    width: 250px !important;
+    transition-duration: 0.1s
+  }
+  
+  .w-70 {
+    width: 70px !important;
+    transition-duration: 0.3s
+  }
+  
+  .ml-250 {
+    margin-left: 250px !important;
+    transition-duration: 0.1s
+  }
+  
+  .ml-70 {
+    margin-left: 70px !important;
+    transition-duration: 0.3s
+  }
+
 
  td .badge {
     width: 60px;
@@ -451,6 +471,10 @@ body {
 
 .vue-grid-placeholder {
   background: none !important;
+}
+
+.sub-header {
+  display: none;
 }
 
 @media screen and (max-width: 1366px) {
@@ -474,6 +498,9 @@ body {
      margin-left: -22px !important;
      font: bold 14px Arial !important;
      top: 12px;
+   }
+   .footer {
+     position: fixed !important;
    }
  }
  
@@ -499,9 +526,24 @@ body {
       font: bold 14px Arial !important;
       top: 12px;
     }
+    .footer {
+      position: fixed !important;
+    }
   }
  
  @media screen and (max-width: 840px){
+  #sidebar-menu, .button-menu-mobile {
+    display: none !important;
+  }
+  #contentPage {
+    margin-left: 0 !important;
+  }
+  .tab-heading {
+    display: none;
+  }
+  .sub-header {
+    display: inherit;
+  }
   .bg-icon {
      height: 40px !important;
      width: 40px !important;
@@ -515,8 +557,23 @@ body {
      padding-right: 10px;
      padding-left: 10px;
    }
- }
- 
- @media screen and (min-width: 1800px){
- 
+   .footer {
+    position: fixed !important;
   }
+ }
+
+ // scroll bar styles 
+ ::-webkit-scrollbar {
+  width: 10px;
+  /* for vertical scrollbars */
+  height: 10px;
+  /* for horizontal scrollbars */
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.5);
+}

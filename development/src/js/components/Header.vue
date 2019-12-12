@@ -6,31 +6,45 @@
     <div class="container-fluid"
       style="position: relative;"
     >
-      <router-link class="navbar-brand"
-        :to="{name: 'monitoring'}"
+     <div class="topbar-left pl-2" 
+        v-bind:class="[isSidebarOpen ? 'w-250' : 'w-70']"
       >
-        <img src="images/logo.png"
-          alt="ProfitTrailer Logo"
-          width="35"
-          style="vertical-align: middle;"
+        <router-link class="navbar-brand"
+          :to="{name: 'monitoring'}"
         >
-          <span class="heading-text"
-            style="color: #FF9900;"
+          <img src="images/logo.png"
+            alt="ProfitTrailer Logo"
+            width="35"
+            style="vertical-align: middle;"
           >
-            Profit<span style="color: #3bafda;">Trailer</span>
+            <span class="heading-text"
+              v-if="isSidebarOpen"
+              style="color: #FF9900;"
+            >
+              Profit<span style="color: #3bafda;">Trailer</span>
+            </span>
+          <span class="testModeContainerRibbon"
+            id="testModeContainerRibbon"
+            v-if="settings.testMode && isSidebarOpen"
+          >
+            TESTMODE
           </span>
-        <span class="testModeContainerRibbon"
-          id="testModeContainerRibbon"
-          v-if="settings.testMode"
-        >
-          TESTMODE
-        </span>
-        <span class="bot-type"
-          v-if="settings.licenseType"
-        >
-          {{ settings.licenseType }}
-        </span>
-      </router-link>
+          <span class="bot-type pl-2"
+            v-if="settings.licenseType && isSidebarOpen"
+          >
+            {{ settings.licenseType }}
+          </span>
+        </router-link>
+      </div>
+      <b-navbar-nav class="list-inline mb-0 monitor-summary hide-phone">
+        <li class="float-left">
+            <button class="button-menu-mobile shadow-none open-left waves-light waves-effect"
+             v-on:click="toggleSidebar" 
+            >
+              <i class="fa fa-bars text-primary"></i>
+            </button>
+          </li>
+      </b-navbar-nav>
       <b-navbar-nav class="list-inline mb-0 monitor-summary hide-phone ticker-list"
         style="display: block;"
       >
@@ -159,6 +173,13 @@
       </div>
       <div class="container-fluid router-menu">
         <b-navbar-nav>
+          <li class="nav-item tab-heading"
+            v-bind:class="[isSidebarOpen ? 'ml-250' : 'ml-70']"
+            >
+            <h2>{{currentRout}}</h2>
+          </li>
+       </b-navbar-nav>
+        <b-navbar-nav class="sub-header">
           <li class="nav-item">
             <router-link class="nav-link"
               :to="{name: 'monitoring'}"
@@ -268,7 +289,7 @@
         </b-navbar-nav>
         <b-navbar-nav class="ml-auto list-inline">
           <li id="addWidgetsContainer"
-            class="dropdown d-none d-lg-block list-inline-item notification-list"
+            class="dropdown d-lg-block list-inline-item notification-list"
           >
             <a class="nav-link dropdown-toggle mr-0 waves-effect waves-light"
               data-toggle="dropdown"
@@ -468,8 +489,10 @@
         misc: 'monitoring/misc',
         stats: 'monitoring/stats',
         settings: 'monitoring/settings',
-        isAPICallInProgress: 'monitoring/isAPICallInProgress'
-      })
+        isAPICallInProgress: 'monitoring/isAPICallInProgress',
+        isSidebarOpen: 'monitoring/isSidebarOpen',
+        currentRout: 'monitoring/currentRout'
+      })    
     },
     methods: {
       // To implement fullscreen functionality.
@@ -523,7 +546,13 @@
         }
         this.items.splice(cardIndex,1);
         this.$root.$emit('addCardsTOMonitoring', cardToAdd);
+      },
+      toggleSidebar() {
+        this.$store.commit('monitoring/isSidebarOpen');
       }
+    },
+    created() {
+      this.$store.commit('monitoring/currentRout', this.$root.$options.router.history.current.name);
     },
     mounted() {
       var componentList = localStorage.getItem('component_list') ? JSON.parse(localStorage.getItem('component_list')) : '' ; 
@@ -562,6 +591,22 @@
 
 .container-fluid {
   height: 100%;
+  max-width: 100%;
+}
+
+.button-menu-mobile {
+  border: none;
+  color: #ffffff;
+  display: inline-block;
+  font-size: 24px;
+  background-color: #36404a;
+  border-color: #36404a;
+  outline: none;
+}
+
+.tab-heading  h2{
+  font-size: 18px;
+  text-transform: uppercase;
 }
 
 .monitor-summary {
@@ -604,7 +649,7 @@
 }
 
 .ticker-list {
-  margin-left: 10px;
+  margin-left: 50px;
 }
 
 .router-menu {
