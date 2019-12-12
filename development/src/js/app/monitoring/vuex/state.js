@@ -10,5 +10,7 @@ export default {
   isAPICallInProgress: true,
   marketCap: {},
   globalMarketCap: {},
-  globalMarketCapPercentage: null
+  globalMarketCapPercentage: null,
+  isSidebarOpen: true,
+  currentRout: ''
 }

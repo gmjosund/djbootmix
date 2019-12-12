@@ -1,9 +1,15 @@
 <template>
   <div id="app">
     <app-header id="topnav"></app-header>
-
-    <router-view></router-view>
-
+    <div class="row">
+        <app-sidebar></app-sidebar>
+      <div id="contentPage" 
+        class="col"
+        v-bind:class="[isSidebarOpen ? 'ml-250' : 'ml-70']"
+        >
+        <router-view></router-view>
+      </div>
+    </div>
     <app-footer></app-footer>
   </div>
 
@@ -12,6 +18,7 @@
 <script>
 import Header from './components/Header'
 import Footer from './components/Footer'
+import Sidebar from './components/SideBar'
 import { TIMERS, PT_LINKS } from './helpers/constants';
 import $ from 'jquery'
 import axios from 'axios'
@@ -23,7 +30,8 @@ export default {
 
   components: {
     'app-header': Header,
-    'app-footer': Footer
+    'app-footer': Footer,
+    'app-sidebar': Sidebar
   },
   data() {
     return {
@@ -34,7 +42,8 @@ export default {
   computed: {
     ...mapGetters({
       settings: 'monitoring/settings',
-      misc: 'monitoring/misc'
+      misc: 'monitoring/misc',
+      isSidebarOpen: 'monitoring/isSidebarOpen',
     })
   },
   methods: {
@@ -99,3 +108,16 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.row {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+  margin-top: 110px
+}
+
+#contentPage div {
+  max-width: 100%;
+}
+
+</style>

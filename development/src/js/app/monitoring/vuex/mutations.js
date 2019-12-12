@@ -58,3 +58,11 @@ export const setGlobalMarketCapData = (state, data) => {
 export const setGlobalMarketCapPercentage = (state, data) => {
   state.globalMarketCapPercentage = data
 }
+
+export const isSidebarOpen = (state) => {
+  state.isSidebarOpen = !state.isSidebarOpen
+}
+
+export const currentRout = (state, data) => {
+  state.currentRout = data;
+}
