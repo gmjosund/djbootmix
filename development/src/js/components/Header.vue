@@ -801,4 +801,28 @@
     -webkit-opacity: 0;
   }
 }
+
+.w-250 { 
+    animation: fadeInAnimation ease 1s;
+    animation-iteration-count: 1; 
+    animation-fill-mode: forwards; 
+} 
+
+@keyframes fadeInAnimation { 
+    0% { 
+        opacity: 0; 
+    } 
+    100% { 
+        opacity: 1; 
+     } 
+} 
+  
+@-webkit-keyframes fadeInAnimation { 
+    0% { 
+        -webkit-opacity: 0;
+    } 
+    100% { 
+        -webkit-opacity: 0;
+     } 
+} 
 </style>

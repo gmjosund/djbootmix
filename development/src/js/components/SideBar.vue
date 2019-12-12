@@ -13,7 +13,7 @@
                 :to="{name: 'monitoring'}"
               >
                 <i class="fa fa-home"></i>
-                  <span v-bind:class="[isSidebarOpen ? '' : 'd-none']"
+                  <span v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                   >
                     Monitor
                   </span>
@@ -26,10 +26,11 @@
                 :to="{name: 'possible-buys'}"
               >
                 <i class="fa fa-optin-monster"></i>
-                <span v-bind:class="[isSidebarOpen ? '' : 'd-none']"
+                <span v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                 >Possible Buys
                   <b-badge variant="primary"
                     class="records-count pull-right"
+                    v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                   >
                     {{ possibleBuysAmount }}
                   </b-badge>
@@ -43,11 +44,12 @@
                 :to="{name: 'pairs'}"
               >
                 <i class="fa fa-houzz"></i>
-                <span v-bind:class="[isSidebarOpen ? '' : 'd-none']"
+                <span v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                 >
                   Pairs
                   <b-badge variant="primary"
                     class="records-count pull-right"
+                    v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                   >
                     {{ pairsAmount }}
                   </b-badge>
@@ -61,11 +63,12 @@
                 :to="{name: 'dca'}"
               >
                 <i class="fa fa-hand-peace-o"></i>
-                <span v-bind:class="[isSidebarOpen ? '' : 'd-none']"
+                <span v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                 > 
                 DCA
                 <b-badge variant="primary"
                   class="records-count pull-right"
+                  v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                 >
                   {{ dcaAmount }}
                 </b-badge>
@@ -79,11 +82,12 @@
                 :to="{name: 'pending'}"
               >
                 <i class="fa fa-gg"></i>
-                <span v-bind:class="[isSidebarOpen ? '' : 'd-none']"
+                <span v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                 >
                 Pending
                 <b-badge variant="primary"
                   class="records-count pull-right"
+                  v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                 >
                   {{ pendingAmount }}
                 </b-badge>
@@ -97,11 +101,12 @@
                 :to="{name: 'buys'}"
               >
                 <i class="fa fa-shopping-basket"></i>
-                <span v-bind:class="[isSidebarOpen ? '' : 'd-none']"
+                <span v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                 >
                   Buys
                   <b-badge variant="primary"
                     class="records-count pull-right"
+                    v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                   >
                     {{ buyAmount }}
                   </b-badge>
@@ -115,11 +120,12 @@
                 :to="{name: 'sales'}"
               >
                 <i class="fa fa-balance-scale"></i>
-                <span v-bind:class="[isSidebarOpen ? '' : 'd-none']"
+                <span v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                 >
                 Sales
                   <b-badge variant="primary"
                     class="records-count pull-right"
+                    v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                   >
                     {{ salesAmount }}
                   </b-badge>
@@ -133,11 +139,12 @@
                 :to="{name: 'dust'}"
               >
                 <i class="fa fa-recycle"></i>
-                <span v-bind:class="[isSidebarOpen ? '' : 'd-none']"
+                <span v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                 >
                 Dust
                   <b-badge variant="primary"
                     class="records-count pull-right"
+                    v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                   >
                     {{ dustAmount }}
                 </b-badge>
@@ -151,7 +158,7 @@
                 :to="{name: 'apiLogs'}"
               >
                 <i class="fa fa-align-left"></i>
-                <span v-bind:class="[isSidebarOpen ? '' : 'd-none']"
+                <span v-bind:class="[isSidebarOpen ? 'show' : 'd-none']"
                 >
                   Logs
                 </span>
@@ -219,8 +226,14 @@
   color:#98a6ad
 }
 
-#sidebar-menu>ul>li>a {
+li.nav-item:hover > a {
+  color: #ffffff !important;
+  font-weight: bold !important;
+}
+
+#sidebar-menu>ul>li {
   display: block;
+  height: 50px;
   padding: 12px 20px;
   margin: 4px 0;
 }
@@ -287,4 +300,28 @@
 .pull-right {
   float: right;
 }
+
+.show { 
+    animation: fadeInAnimation ease 1s;
+    animation-iteration-count: 1; 
+    animation-fill-mode: forwards; 
+} 
+
+@keyframes fadeInAnimation { 
+    0% { 
+        opacity: 0; 
+    } 
+    100% { 
+        opacity: 1; 
+     } 
+} 
+  
+@-webkit-keyframes fadeInAnimation { 
+    0% { 
+        opacity: 0; 
+    } 
+    100% { 
+        opacity: 1; 
+     } 
+} 
 </style>
