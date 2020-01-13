@@ -285,7 +285,7 @@
       this.colNum = this.getColumns(window.innerWidth);
       this.components = localStorage.getItem('component_list')
         ? JSON.parse(localStorage.getItem('component_list'))
-        : DEFAULT_COMPONENTS;
+        : DEFAULT_COMPONENTS_LIST;
       this.generateLayout();
       this.addCardToLayout();
     },

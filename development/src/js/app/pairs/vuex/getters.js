@@ -8,3 +8,7 @@ export const pairsAmount = (state) => {
 export const pairsCalculations = (state) => {
   return state.calculations
 }
+
+export const serverData = (state) => {
+  return state.serverData
+}

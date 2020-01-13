@@ -13,3 +13,7 @@ export const setPairsLog = (state, data) => {
   state.calculations.currentValue = currentValue
   state.calculations.boughtCost = boughtCost
 }
+
+export const setServerData = (state, data) => {
+  state.serverData = data;
+}

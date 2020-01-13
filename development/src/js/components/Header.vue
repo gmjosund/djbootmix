@@ -286,7 +286,7 @@
                 </h5>
               </div>
               <div class="dropdown-item notify-item"
-                   v-if="items.length === 0">
+                   v-if="items">
                   All cards are added.
               </div>
               <div class="dropdown-item notify-item"
