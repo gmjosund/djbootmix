@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import Header from './components/Header'
+import Header from './components/Header/Header'
 import Footer from './components/Footer'
-import { TIMERS, PT_LINKS } from './helpers/constants';
+import { TIMERS, PT_LINKS} from './helpers/constants';
 import $ from 'jquery'
 import axios from 'axios'
 import './helpers/sparkline.js'

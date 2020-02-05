@@ -10,6 +10,7 @@ import possibleBuys from '../app/possibleBuys/vuex'
 import pending from '../app/pending/vuex'
 import apiLogs from '../app/apiLogs/vuex'
 import auth from '../app/auth/vuex'
+import header from '../components/Header/vuex'
 
 
 Vue.use(Vuex)
@@ -25,7 +26,7 @@ export default new Vuex.Store({
     pending: pending,
     pairs: pairs,
     possibleBuys: possibleBuys,
-    apiLogs: apiLogs
-
+    apiLogs: apiLogs,
+    header: header
   }
 })

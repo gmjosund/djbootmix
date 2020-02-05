@@ -450,7 +450,12 @@
 
 <script>
   import {mapActions, mapGetters } from 'vuex'
+  import { TIMERS, PT_LINKS, API_URLS, BASE_CURRENCY, CURRENCY_SYMBOLS, BASE_CURRENCY_NAME, BASE_CURRENCY_SYMBOL} from '../../helpers/constants';
+  import axios from 'axios'
   export default {
+    created() {
+      
+    },
     data() {
       return {
         items: [],
@@ -468,7 +473,7 @@
         misc: 'monitoring/misc',
         stats: 'monitoring/stats',
         settings: 'monitoring/settings',
-        isAPICallInProgress: 'monitoring/isAPICallInProgress'
+        isAPICallInProgress: 'monitoring/isAPICallInProgress',
       })
     },
     methods: {

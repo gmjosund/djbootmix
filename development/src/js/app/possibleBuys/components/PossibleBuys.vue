@@ -17,46 +17,45 @@
 
 <script>
   import {mapActions, mapGetters } from 'vuex'
+  import $ from 'jquery';
   import dataTable from '../../../components/dataTable'
   import DataTableHelper from '../../../mixins/DataTableHelper'
   import DOMHelper from '../../../mixins/DOMHelper'
   import axios from 'axios'
   import state from '../vuex/state'
-  import SummaryTable from '../../../components/SummaryTable'
+  import Store from '../../../vuex/index'
 
   export default {
     components: {
-      dataTable,
-      SummaryTable  
+      dataTable 
     },
     mixins: [DOMHelper, DataTableHelper],
-    beforeRouteEnter (to, from, next) {
-      axios.get(THE_BASE_URL + '/api/v2/data/misc').then((response) => {
-        state.serverData = response.data;
-      }).catch((error) => {
-        }).finally((response) => {
-       next();
-      })
+    beforeRouteEnter (to, from, next) { 
+      Store.dispatch('header/getMiscLogs');
+      Store.dispatch('header/getCurrencies');
+      Store.dispatch('header/getPropertyLogs').finally((response) => {
+        next();
+      });
     },
     data() {
       return {
         columns: [
           {
-            title: 'coin',
+            title: 'Coin',
             data: 'market',
             tooltip: 'psbSection.coin.colTitle',
             className: 'market',
             render: this.renderCombinedMarketCol,
           },
           {
-            title: 'currPrice',
+            title: 'Ask Price',
             data: 'currentPrice',
             tooltip: 'psbSection.currPrice.colTitle',
             className: 'text-right blue-color current-price',
             render: this.currentMarketPrecision,
           },
           {
-            title: 'vol',
+            title: 'VOL',
             data: 'volume',
             tooltip: 'psbSection.vol.colTitle',
             className: 'text-right volume',
@@ -64,33 +63,39 @@
             render: this.renderVolume,
           },
           {
-            title: 'buyStrat',
+            title: 'Buy',
             data: this.renderBuyStrategy('buyStrategies', true),
             tooltip: 'psbSection.buyStrat.colTitle',
             className: 'buy-strategy'
           },
           {
-            title: 'currVal',
+            title: 'BSV',
             data: 'buyStrategies',
             tooltip: 'psbSection.currVal.colTitle',
             className: 'text-right blue-color current-value',
             render: this.checkAllValAndHandleStratCurVal,
           },
           {
-            title: 'buyValue',
+            title: 'BST',
             data: 'buyStrategies',
             tooltip: 'psbSection.buyValue.colTitle',
             className: 'text-right buy-value',
             render: this.checkAllValAndHandleStratEntryVal,
           },
           {
-            title: 'buyLimit',
+            title: 'BSL',
             data: 'buyStrategies',
             tooltip: 'psbSection.buyLimit.colTitle',
             className: 'text-right',
             responsivePriority: 1,
             render: this.handlePBEntryLimit,
           },
+          {
+            title: 'Actions',
+            tooltip: 'Actions',
+            data: this.addActionButtons,
+            className: 'text-right'
+          }
         ],
         options: {
           order: [[3, 'desc']],
@@ -137,12 +142,7 @@
       }];
     },
     mounted () {
-
-    },
-    watch : {
-      possibleBuys: function () {
-        this.$refs.wrapper.addButtons(this.buttonOptions);
-      }
+      
     }
   }
 </script>

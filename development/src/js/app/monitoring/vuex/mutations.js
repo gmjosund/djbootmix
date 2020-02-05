@@ -1,7 +1,9 @@
 export const setSettings = (state, data) => {
   state.settings = data
 }
-
+export const setProperties = (state, data) => {
+  state.properties = data
+}
 export const setStats = (state, data) => {
   state.stats = data
 }

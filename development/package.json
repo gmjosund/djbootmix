@@ -54,6 +54,7 @@
     "jszip": "^3.2.2",
     "vue-grid-layout": "^2.3.7",
     "vue-knob": "^1.0.2",
-    "vue-peity": "^0.5.0"
+    "vue-peity": "^0.5.0",
+    "vue-sweetalert2": "^3.0.1"
   }
 }

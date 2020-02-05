@@ -9,17 +9,7 @@
             v-bind:table-data="pairs"
             ref="wrapper"
           ></dataTable>
-           <summary-table :firstValueFullText="'currVal'"
-              :firstValueShortText="'cv'"
-              :firstValue="pairsCalculations.currentValue"
-              :differenceFullText="'difference'"
-              :differenceShortText="'diff'"
-              :differencePerc="percentageCalculation(pairsCalculations.currentValue, pairsCalculations.boughtCost)"
-              :differenceValue="(pairsCalculations.currentValue - pairsCalculations.boughtCost).toFixed(8)"
-              :secondValueFullText="'boughtCost'"
-              :secondValueShortText="'bc'"
-              :secondValue="pairsCalculations.boughtCost"
-            ></summary-table>
+          <TableInfo :amount="pairsAmount" :data="pairs"></TableInfo>
         </b-card>
       </div>
     </div>
@@ -29,57 +19,55 @@
 <script>
   import {mapActions, mapGetters } from 'vuex'
   import dataTable from '../../../components/dataTable'
-  import SummaryTable from '../../../components/SummaryTable'
   import DOMHelper from '../../../mixins/DOMHelper'
   import DataTableHelper from '../../../mixins/DataTableHelper'
   import { percentageCalculation } from '../../../helpers'
-  import axios from 'axios'
-  import state from '../vuex/state'
+  import TableInfo from './PairsTableInfo'
+  import Store from '../../../vuex/index'
 
   export default {
     components: {
       dataTable,
-      SummaryTable  
+      TableInfo  
     },
     mixins: [DOMHelper, DataTableHelper],
-    beforeRouteEnter (to, from, next) {
-      axios.get(THE_BASE_URL + '/api/v2/data/misc').then((response) => {
-        state.serverData = response.data;
-      }).catch((error) => {
-        }).finally((response) => {
-       next();
-      })
+    beforeRouteEnter (to, from, next) { 
+      Store.dispatch('header/getMiscLogs');
+      Store.dispatch('header/getCurrencies');
+      Store.dispatch('header/getPropertyLogs').finally((response) => {
+        next();
+      });
     },
     data() {
       return {
         columns: [{
-          title: 'date',
-          data: this.dateHandler('lastBoughtDate', 'averageCalculator'),
+          title: 'Date',
+          data: this.dateHandler('lastBoughtDate'),
           tooltip: 'date.colTitle',
           className: 'date ',
           responsivePriority: 1,
         }, {
-          title: 'coin',
+          title: 'Coin',
           data: 'market',
           tooltip: 'coin.colTitle',
           className: 'market',
           render: this.renderCombinedMarketCol,
           responsivePriority: 1,
         }, {
-          title: 'sellStrat',
+          title: 'Sell',
           data: this.renderSellStrategyWithButton('sellStrategies', true),
           tooltip: 'sellStrat.colTitle',
           className: 'sell-strategy',
           responsivePriority: 1,
         }, {
-          title: 'stratVal',
+          title: 'SSV',
           data: 'sellStrategies',
           tooltip: 'dataTableSection.stratVal.colTitle',
           render: this.handleStratCurrentVal,
           className: 'text-right current-value ',
           responsivePriority: 1,
         }, {
-          title: 'stratTrigger',
+          title: 'SST',
           data: 'sellStrategies',
           tooltip: 'dataTableSection.stratTrigger.colTitle',
           render: this.handleStratEntryVal,
@@ -119,13 +107,13 @@
           responsivePriority: 1,
           className: 'hide',
         }, {
-          title: '<span class="api-currency"> </span>',
+          title: '<span class="api-currency"></span>',
           tooltip: 'dataTableSection.currValCurrency.colTitle',
           data: this.getCurrentValue(false, true),
           responsivePriority: 1,
           className: 'text-right blue-color current-value  hide',
         }, {
-          title: 'boughtCost.colName',
+          title: 'boughtCost',
           data: this.handleTotalCost(true),
           responsivePriority: 1,
           className: 'hide',
@@ -136,25 +124,30 @@
           responsivePriority: 1,
           className: 'text-right blue-color bought-cost  hide',
         }, {
-          title: '<span class="api-currency"></span>',
+          title: '<span class="api-currency" ></span>',
           tooltip: 'boughtCostCurrency.colTitle',
           data: this.getCurrentValAndTotalCost(false, true),
           className: 'text-right bought-cost currency-value',
           responsivePriority: 3,
         }, {
-          title: 'vol.colName',
+          title: 'VOL',
           data: 'volume',
           tooltip: 'vol.colTitle',
           className: 'text-right volume',
           responsivePriority: 6,
           render: this.renderVolume,
         }, {
-          title: 'totalAmount.colName',
+          title: 'TAM',
           data: this.handleTotalAmount,
           tooltip: 'totalAmount',
           responsivePriority: 5,
           className: 'text-right total-amount',
-        }],
+        },{
+            title: 'Actions',
+            tooltip: 'Actions',
+            data: this.addActionButtons,
+            className: 'text-right'
+          }],
         options: {
           order: [[8, 'desc']],
           fixedColumnsLength: 5,
@@ -171,10 +164,11 @@
         settings: 'monitoring/settings',
         misc: 'monitoring/misc',
         pairsCalculations: 'pairs/pairsCalculations',
+        currency: 'header/currency',
       })
     },
      beforeMount() {
-      this.columns = this.getExportDateColumns(this.columns, 1, 'lastBoughtDate', 'averageCalculator');
+      this.columns = this.getExportDateColumns(this.columns, 1, 'lastBoughtDate');
       this.buttonOptions = [{
         extend: 'excel',
         exportOptions: {
@@ -204,13 +198,8 @@
         return this.options;
       },
     },
-    watch: {
-      pairs: function pairs() {
-    
-      },
-    },
     mounted() {
-    
+      this.$refs.wrapper.updateColumnHeader(this.currency, [17, 14, 16]);
     }
   }
 </script>

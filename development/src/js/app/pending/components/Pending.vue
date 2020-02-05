@@ -2,117 +2,14 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <b-card>
-          <b-table
-            striped
-            bordered
-            :items="pending"
-            :fields="fields"
-            :sort-by.sync="sortBy"
-            :sort-desc.sync="sortDesc"
-            show-empty
-          >
-            <!-- Formatted headers -->
-            <template slot="empty" slot-scope="scope">
-              <h5 class="text-center">{{ scope.emptyText }}</h5>
-            </template>
-            <template slot="emptyfiltered" slot-scope="scope">
-              <h5 class="text-center">{{ scope.emptyFilteredText }}</h5>
-            </template>
-
-            <!-- Coin -->
-            <template slot="HEAD_market" slot-scope="data">
-              <span v-b-tooltip.hover title="Coin Pair">{{ data.label }}</span>
-            </template>
-
-            <!-- Sell Strategy -->
-            <template slot="HEAD_sellStrategies" slot-scope="data">
-              <span v-b-tooltip.hover title="Sell Strategy">{{ data.label }}</span>
-            </template>
-
-            <!-- Bid Price / Average Price -->
-            <template slot="HEAD_bidAvgPrice" slot-scope="data">
-              <span v-b-tooltip.hover title="Bid Price and Average Price">Bid.Pr<br>Avg.Pr</span>
-            </template>
-
-            <!-- Profit % -->
-            <template slot="HEAD_profit" slot-scope="data">
-              <span v-b-tooltip.hover title="Profit in %">{{ data.label }}</span>
-            </template>
-
-            <!-- Combined Profits -->
-            <template slot="HEAD_combinedProfit" slot-scope="data">
-                <span v-b-tooltip.hover title="Combined Profits in %">{{ data.label }}</span>
-            </template>
-
-            <!-- Total Amount -->
-            <template slot="HEAD_totalAmount" slot-scope="data">
-              <span v-b-tooltip.hover title="Total Amount">{{ data.label }}</span>
-            </template>
-
-            <!-- Current Value / Target Cost -->
-            <template slot="HEAD_currentTargetValue" slot-scope="data">
-              <span v-b-tooltip.hover title="Current Value and Target Value">Cur.Val<br>Tar.Cost</span>
-            </template>
-
-            <!-- Fiat -->
-            <template slot="HEAD_fiat" slot-scope="data">
-              <span v-b-tooltip.hover title="Current Value and Target Value in USD">USD</span>
-            </template>
-
-
-            <!-- End of Formatted headers -->
-
-            <!-- Coin -->
-            <template slot="market" slot-scope="data">
-              <span class="market"><a href="#">{{ data.item.market }}</a></span><br>
-              <span :class="data.item.percChange > 0 ? 'profit-classtext' : 'loss-classtext'">{{ (data.item.percChange * 100).toFixed(2)}} %</span>
-            </template>
-
-            <!-- Bid Price / Avg. Price -->
-            <template slot="bidAvgPrice" slot-scope="data">
-              <span class="blue-color">{{ data.item.currentPrice.toFixed(8) }}</span><br>
-              <span class="blue-color">{{ data.item.avgPrice.toFixed(8) }}</span>
-            </template>
-
-            <!-- Profit -->
-            <template slot="profit" slot-scope="data">
-              <span class="mb-1 badge" :class="data.item.profit > 0 ? 'badge-success' : 'badge-danger'">{{ data.item.profit.toFixed(2) }}</span><br>
-              <span class="badge badge-success" v-if="data.item.orderbookProfit > 0">{{ data.item.orderbookProfit.toFixed(2) }}</span>
-            </template>
-
-            <!-- Combined Profit -->
-            <template slot="combinedProfit" slot-scope="data">
-              <span :class="data.item.combinedProfit >= 0 ? 'profit-classtext' : 'loss-classtext'">{{ data.item.combinedProfit.toFixed(2) }}</span>
-            </template>
-
-            <!-- Sell Strategies -->
-            <template slot="sellStrategies" slot-scope="data">
-              <span v-for="limit in data.item.sellStrategies" class="buy-strategy">
-                {{ limit.name }}<br>
-              </span>
-              <div class="text-right ml-5">
-                <button class="btn btn-sm btn-outline-danger text-white">Cancel</button>
-              </div>
-            </template>
-
-            <!-- Current Value / Total Cost -->
-            <template slot="currentTargetValue" slot-scope="data">
-              <span class="blue-color">{{ data.item.currentValue.toFixed(data.item.pricePrecision) }}</span><br>
-              <span class="blue-color">{{ data.item.totalCost.toFixed(data.item.pricePrecision) }}</span>
-            </template>
-
-            <!-- Fiat -->
-            <template slot="fiat" slot-scope="data">
-              <span class="blue-color">$ {{(data.item.currentValue.toFixed(data.item.pricePrecision) * 5289.96).toFixed(2) }}</span><br>
-              <span class="blue-color">$ {{(data.item.totalCost.toFixed(data.item.pricePrecision) * 5289.96).toFixed(2) }}</span><br>
-            </template>
-
-
-          </b-table>
-
-          <TableInfo :amount="pendingAmount" :data="pending"></TableInfo>
-
+        <b-card class="table-responsive">
+          <dataTable class="table"
+            :tableId="'pendingLogs'"
+            v-bind:columns="columns"
+            v-bind:table-data="pending"
+            ref="wrapper"
+          ></dataTable>
+           <TableInfo :amount="pendingAmount" :data="pending"></TableInfo>
         </b-card>
       </div>
     </div>
@@ -121,31 +18,175 @@
 
 <script>
   import {mapActions, mapGetters } from 'vuex'
+  import dataTable from '../../../components/dataTable'
+  import DataTableHelper from '../../../mixins/DataTableHelper'
+  import DOMHelper from '../../../mixins/DOMHelper'
+  import Store from '../../../vuex/index'
   import TableInfo from './PendingTableInfo'
+  
 
   export default {
-    components: {TableInfo},
+    components: {
+      dataTable,
+      TableInfo  
+    },
+    mixins: [DOMHelper, DataTableHelper],
+    beforeRouteEnter (to, from, next) { 
+      Store.dispatch('header/getMiscLogs');
+      Store.dispatch('header/getCurrencies');
+      Store.dispatch('header/getPropertyLogs').finally((response) => {
+        next();
+      });
+    },
     data() {
       return {
-        sortBy: 'profit',
-        sortDesc: true,
-        fields: [
-          {key: 'market', label: 'Coin', sortable: true},
-          {key: 'sellStrategies', label: 'Sell', sortable: true},
-          {key: 'bidAvgPrice', class: 'text-right', sortable: true},
-          {key: 'profit', label: 'P%', sortable: true, class: 'text-center'},
-          {key: 'combinedProfit', label: 'Comb. P%', sortable: true, class: 'text-center'},
-          {key: 'totalAmount', label: 'TAM', sortable: true, class: 'text-right'},
-          {key: 'currentTargetValue', class: 'text-right', sortable: true},
-          {key: 'fiat', label: 'USD', sortable: true, class: 'text-right'},
-        ]
-      }
+        columns: [
+          {
+            title: 'Coin',
+            tooltip: 'pendingSection.coin.colTitle',
+            className: 'market',
+            data: 'market',
+            responsivePriority: 1,
+            render: this.renderCombinedMarketCol,
+          },
+          {
+            title: 'Sell',
+            tooltip: 'pendingSection.sellStrat.colTitle',
+            data: 'sellStrategies',
+            render: this.renderStrategy,
+            responsivePriority: 1,
+            className: 'sell-strategy',
+          },
+          {
+            title: 'Cur.Price <br> Target Price',
+            tooltip: 'pendingSection.currPricetargetPrice.colTitle',
+            data: this.handleAvgValAndCurrentPrice(),
+            responsivePriority: 1,
+            className: 'text-right target-price',
+          },
+          {
+            title: 'Cur.Price',
+            data: this.handleAvgValAndCurrentPrice(true),
+            className: 'hide',
+            visible: false,
+          },
+          {
+            title: 'Target Price',
+            data: this.handleAvgValAndCurrentPrice(false, true),
+            className: 'hide',
+            visible: false,
+          },
+          {
+            title: 'P%',
+            data: 'profit',
+            tooltip: 'pendingSection.profit.colTitle',
+            className: 'text-center profit',
+            responsivePriority: 1,
+            render: this.handleProfit,
+          },
+          {
+            title: 'CP%',
+            data: 'combinedProfit',
+            tooltip: 'pendingSection.comboProfit.colTitle',
+            className: 'text-center profit',
+            render: this.handleMoney,
+            responsivePriority: 1,
+          },
+          {
+            title: 'TAM',
+            data: this.handleTotalAmount,
+            tooltip: 'pendingSection.totalAmount.colTitle',
+            responsivePriority: 3,
+            className: 'text-right total-amount',
+          },
+          {
+            title: 'Cur.Value <br> Target Price',
+            tooltip: 'pendingSection.currVal.colTitle',
+            data: this.getCurrentValAndTotalCost(true),
+            responsivePriority: 2,
+            className: 'text-right blue-color current-value',
+          },
+          {
+            title: 'Cur.Value',
+            data: this.getCurrentValue(true),
+            className: 'hide',
+            visible: false,
+          },
+          {
+            title: '<span class="api-currency"> </span>',
+            data: this.getCurrentValue(false, true),
+            className: 'hide',
+          },
+          {
+            title: 'Tar.val',
+            data: this.handleTotalCost(true),
+            responsivePriority: 1,
+            className: 'text-right hide',
+          },
+          {
+            title: '<span class="api-currency"> </span>',
+            data: this.handleTotalCost(false, true),
+            className: 'hide',
+          },
+          {
+            title: '<span class="api-currency"> </span>',
+            tooltip: 'pendingSection.targetCurrentValCurrency.colTitle',
+            data: this.getCurrentValAndTotalCost(false, true),
+            responsivePriority: 1,
+            className: 'text-right blue-color current-value currency-value',
+          },
+          {
+            title: 'Actions',
+            tooltip: 'Actions',
+            data: this.addActionButtons,
+            className: 'text-right'
+          }
+        ],
+        options: {
+          order: [[5, 'desc']],
+          fixedColumnsLength: 1,
+        },
+        summaryTableData: {},
+        buttonOptions: [],
+        datatableReference: {},
+      };
     },
     computed: {
       ...mapGetters({
         pending: 'pending/pendingLog',
-        pendingAmount: 'pending/pendingAmount'
+        pendingAmount: 'pending/pendingAmount',
+        currency: 'header/currency',
       })
+    },
+    beforeMount() {
+      this.buttonOptions = [{
+        extend: 'excel',
+        exportOptions: {
+          columns: this.getExcelColumns(13, [2, 8, 13], [10, 12]),
+          orthogonal: 'export',
+        },
+        className: 'btn btn-dark',
+        title: 'pendingLog',
+        filename: 'pending-log-',
+        text: 'Excel',
+      }];
+    },
+    methods: {
+      getDataTableOptions() {
+        const isResponsive = this.isResponsive();
+        const fixedColumn = !isResponsive && this.options.fixedColumnsLength ?
+          this.options.fixedColumnsLength : 0;
+        this.options.responsive = isResponsive;
+        this.options.scrollX = !isResponsive;
+        this.options.fixedColumns = {
+          leftColumns: fixedColumn,
+        };
+        this.options.buttons = this.buttonOptions;
+        return this.options;
+      },
+    },
+    mounted() {
+      this.$refs.wrapper.updateColumnHeader(this.currency, [13, 10, 12]);
     }
   }
 </script>

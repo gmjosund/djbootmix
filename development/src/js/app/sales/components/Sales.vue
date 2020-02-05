@@ -2,126 +2,15 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <b-card>
-          <b-table
-            striped
-            bordered
-            :items="sales"
-            :fields="fields"
-            :sort-by.sync="sortBy"
-            :sort-desc.sync="sortDesc"
-          >
-            <!-- Formatted headers -->
-            <!-- Date -->
-            <template slot="HEAD_soldDate" slot-scope="data">
-              <span v-b-tooltip.hover title="First bought date (Time since buy)">{{ data.label }}</span>
-            </template>
-
-            <!-- Coin -->
-            <template slot="HEAD_market" slot-scope="data">
-              <span v-b-tooltip.hover title="Coin Pair">{{ data.label }}</span>
-            </template>
-
-            <!-- Sell Strategy -->
-            <template slot="HEAD_sellStrategies" slot-scope="data">
-              <span v-b-tooltip.hover title="Sell Strategy">{{ data.label }}</span>
-            </template>
-
-            <!-- Profit Percentage -->
-            <template slot="HEAD_profit" slot-scope="data">
-              <span v-b-tooltip.hover title="Profit in %">{{ data.label }}</span>
-            </template>
-
-            <!-- Profit Percentage -->
-            <template slot="HEAD_profitCurrency" slot-scope="data">
-              <span v-b-tooltip.hover title="Profit BTC">{{ data.label }}</span>
-            </template>
-
-            <!-- Fiat -->
-            <template slot="HEAD_profitFiat" slot-scope="data">
-              <span v-b-tooltip.hover title="Fiat value">{{ data.label }}</span>
-            </template>
-
-            <!-- Sold Amount -->
-            <template slot="HEAD_soldAmount" slot-scope="data">
-              <span v-b-tooltip.hover title="Sold Amount">{{ data.label }}</span>
-            </template>
-
-            <!-- Bought Price / Sold Price -->
-            <template slot="HEAD_boughtSoldPrice" slot-scope="data">
-              <span v-b-tooltip.hover title="Bought Price and Sold Price">Bought Price<br>Sold Price</span>
-            </template>
-
-            <!-- Bought Cost / Sold Value -->
-            <template slot="HEAD_boughtSoldValue" slot-scope="data">
-              <span v-b-tooltip.hover title="Bought Cost and Sold Value">Bought Cost<br>Sold Value</span>
-            </template>
-
-            <!-- Bought Cost / Sold Value -->
-            <template slot="HEAD_fiat" slot-scope="data">
-              <span v-b-tooltip.hover title="Bought Cost and Sold Value in USD">USD</span>
-            </template>
-
-
-            <!-- End of Formatted headers -->
-
-            <!-- Coin -->
-            <template slot="market" slot-scope="data">
-              <span class="market"><a href="#">{{ data.item.market }}</a></span>
-            </template>
-
-            <!-- Sell Strategies -->
-            <template slot="sellStrategies" slot-scope="data">
-              <span v-for="limit in data.item.sellStrategies" class="sell-strategy">
-                <span v-html="limit.name"></span> <span v-if="limit.positive !== 'false' && limit.positive !== ''" class="tdgreen">({{ limit.positive  }})</span><br>
-              </span>
-            </template>
-
-            <!-- Profit -->
-            <template slot="profit" slot-scope="data">
-              <span class="mb-1 badge p-2" :class="data.item.profit >= 0 ? 'badge-success' : 'badge-danger'">{{ data.item.profit.toFixed(2) }}</span>
-            </template>
-
-            <!-- Profit Crypto -->
-            <template slot="profitCurrency" slot-scope="data">
-              <span :class="data.item.profitCurrency >= 0 ? 'profit-classtext' : 'loss-classtext'">{{ data.item.profitCurrency.toFixed(8) }}</span>
-            </template>
-
-            <!-- Profit -->
-            <template slot="profitFiat" slot-scope="data">
-              <span :class="data.item.profitCurrency >= 0 ? 'profit-classtext' : 'loss-classtext'">$ {{(data.item.profitCurrency.toFixed(data.item.pricePrecision) * 5289.96).toFixed(2) }}</span><br>
-            </template>
-
-            <!-- Sold Amount -->
-            <template slot="soldAmount" slot-scope="data">
-              <span class="sold-amount">{{ data.item.soldAmount }}</span>
-            </template>
-
-            <!-- Bought Price / Sold Price -->
-            <template slot="boughtSoldPrice" slot-scope="data">
-              <span class="sold-price">{{ data.item.avgPrice.toFixed(8) }}</span><br>
-              <span class="sold-price">{{ data.item.currentPrice.toFixed(8) }}</span>
-            </template>
-
-            <!-- Bought Cost / Sold Value -->
-            <template slot="boughtSoldValue" slot-scope="data">
-              <span class="sold-value">{{ data.item.totalCost.toFixed(8) }}</span><br>
-              <span class="sold-value">{{ soldValue(data.item.soldValue, data.item.pricePrecision, data.item.fee) }}</span>
-            </template>
-
-            <!-- Bought Cost / Sold Value -->
-            <template slot="fiat" slot-scope="data">
-              <span class="blue-color">$ {{(data.item.totalCost.toFixed(data.item.pricePrecision) * 5289.96).toFixed(2) }}</span><br>
-              <span class="blue-color">$ {{(data.item.soldValue.toFixed(data.item.pricePrecision) * 5289.96).toFixed(2) }}</span>
-            </template>
-
-          </b-table>
-
-          <div role="status" aria-live="polite">Total records: {{ salesAmount }}</div>
-
+        <b-card class="table-responsive">
+          <dataTable class="table"
+            :tableId="'salesLogs'"
+            v-bind:columns="columns"
+            v-bind:table-data="sales"
+            ref="wrapper"
+          ></dataTable>
+          <TableInfo :amount="salesAmount" :data="sales"></TableInfo>
         </b-card>
-
-
       </div>
     </div>
   </div>
@@ -129,35 +18,186 @@
 
 <script>
   import {mapActions, mapGetters } from 'vuex'
+  import dataTable from '../../../components/dataTable'
+  import DataTableHelper from '../../../mixins/DataTableHelper'
+  import DOMHelper from '../../../mixins/DOMHelper'
+  import axios from 'axios'
+  import state from '../vuex/state'
+  import TableInfo from './SalesTableInfo'
+  import $ from 'jquery';
+  import Store from '../../../vuex/index'
+  
+
   export default {
+    components: {
+      dataTable,
+      TableInfo    
+    },
+    mixins: [DOMHelper, DataTableHelper],
+    beforeRouteEnter (to, from, next) { 
+      Store.dispatch('header/getMiscLogs');
+      Store.dispatch('header/getCurrencies');
+      Store.dispatch('header/getPropertyLogs').finally((response) => {
+        next();
+      });
+    },
     data() {
       return {
-        sortBy: 'soldDate',
-        sortDesc: true,
-        fields: [
-          {key: 'soldDate', label: 'Date', sortable: true},
-          {key: 'market', label: 'Coin', sortable: true},
-          {key: 'sellStrategies', label: 'Sell', sortable: true},
-          {key: 'profit', label: 'P%', sortable: true, class: 'text-center'},
-          {key: 'profitCurrency', label: 'Profit BTC', sortable: true, class: 'text-right'},
-          {key: 'profitFiat', label: 'USD', sortable: true, class: 'text-right'},
-          {key: 'soldAmount', label: 'SAM', sortable: true, class: 'text-right'},
-          {key: 'boughtSoldPrice', class: 'text-right', sortable: true},
-          {key: 'boughtSoldValue', class: 'text-right', sortable: true},
-          {key: 'fiat', label: 'USD', sortable: false, class: 'text-right'},
+        columns: [
+          {
+            title: 'Date',
+            tooltip: 'salesLogSection.date.colTitle',
+            data: this.dateHandler('soldDate'),
+            responsivePriority: 1,
+            className: 'date',
+          },
+          {
+            title: 'Coin',
+            data: 'market',
+            tooltip: 'salesLogSection.coin.colTitle',
+            className: 'market',
+            render: this.renderMarketCol,
+            responsivePriority: 1,
+          },
+          {
+            title: 'Sell',
+            data: 'sellStrategies',
+            tooltip: 'salesLogSection.sellStrat.colTitle',
+            responsivePriority: 1,
+            render: this.renderSellStrategy,
+            className: 'sell-strategy',
+          },
+          {
+            title: 'P%',
+            data: 'profit',
+            tooltip: 'salesLogSection.profit.colTitle',
+            responsivePriority: 1,
+            className: 'text-center profit',
+            render: this.handleProfit,
+          },
+          {
+            title: 'Profit BTC',
+            tooltip: 'salesLogSection.profitMarket.colTitle',
+            data: this.getProfitBTCForSalesLog,
+            className: 'text-right profit-btc',
+            responsivePriority: 1,
+          },
+          {
+            title: '<span class="api-currency"> </span>',
+            data: this.getCurrentTrendprofit,
+            tooltip: 'salesLogSection.profitCurrency.colTitle',
+            responsivePriority: 1,
+            className: 'text-right profit-btc currency-value',
+          },
+          {
+            title: 'SAM',
+            data: 'soldAmount',
+            tooltip: 'salesLogSection.soldAmount.colTitle',
+            responsivePriority: 5,
+            className: 'text-right sold-amount',
+          },
+          {
+            title: 'Bought Price <br> Sold Price',
+            data: this.handleAvgPriceBoughtTimes(),
+            tooltip: 'salesLogSection.boughtSoldPrice.colTitle',
+            responsivePriority: 4,
+            className: 'text-right bought-price blue-color',
+          },
+          {
+            title: 'Bought Price',
+            data: this.handleAvgPriceBoughtTimes(true),
+            visible: false,
+          },
+          {
+            title: 'Sold Price',
+            data: this.handleAvgPriceBoughtTimes(false, true),
+            visible: false,
+          },
+          {
+            title: 'Bought Cost <br> Sold Value',
+            data: this.handleBoughtSoldCostForSalesLog,
+            tooltip: 'salesLogSection.boughtSoldValue.colTitle',
+            responsivePriority: 3,
+            className: 'text-right sold-value',
+          },
+          {
+            title: 'Bought Cost',
+            data: this.handleTotalCostForSalesLog(true),
+            className: 'hide',
+          },
+          {
+            title: '<span class="api-currency"> </span>',
+            data: this.handleTotalCostForSalesLog(false, true),
+            class: 'hide',
+          },
+          {
+            title: 'Sold Value',
+            data: this.getCurrentValueForSalesLog(true),
+            visible: false,
+          },
+          {
+            title: '<span class="api-currency"> </span>',
+            data: this.handleBoughtSoldCostCurrency,
+            tooltip: 'salesLogSection.boughtSoldValueCurrency.colTitle',
+            responsivePriority: 2,
+            className: 'sold-value text-right currency-value',
+          },
+          {
+            title: '<span class="api-currency"> </span>',
+            data: this.getCurrentValueForSalesLog(false, true),
+            class: 'hide',
+          },
         ],
-      }
+        options: {
+          order: [[0, 'desc']],
+          fixedColumnsLength: 5,
+          paging: true,
+          searching: true,
+          dom: 'lfrtipB',
+        },
+        summaryTableData: {},
+        buttonOptions: [],
+        datatableReference: {},
+      };
     },
     computed: {
       ...mapGetters({
         sales: 'sales/salesLog',
-        salesAmount: 'sales/salesAmount'
+        salesAmount: 'sales/salesAmount',
+        currency: 'header/currency',
       })
     },
+    beforeMount() {
+      this.columns = this.getExportDateColumns(this.columns, 1, 'soldDate');
+      this.buttonOptions = [{
+        extend: 'excel',
+        exportOptions: {
+          columns: this.getExcelColumns(18, [0, 10, 13, 17], [14, 18]),
+          orthogonal: 'export',
+        },
+        className: 'btn btn-dark',
+        title: 'salesLog',
+        filename: 'sales-log-',
+        text: 'Excel',
+      }];
+    },
     methods: {
-      soldValue(value, precision, fee) {
-        return (value - (value * (fee / 100))).toFixed(precision)
+      getDataTableOptions() {
+        const isResponsive = this.isResponsive();
+        const fixedColumn = !isResponsive && this.options.fixedColumnsLength ?
+          this.options.fixedColumnsLength : 0;
+        this.options.responsive = isResponsive;
+        this.options.scrollX = !isResponsive;
+        this.options.fixedColumns = {
+          leftColumns: fixedColumn,
+        };
+        this.options.buttons = this.buttonOptions;
+        this.options.lengthMenu = [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'all']];
+        return this.options;
       }
+    },
+    mounted() {
+      this.$refs.wrapper.updateColumnHeader(this.currency, [8, 17, 15, 18]);
     }
   }
 </script>

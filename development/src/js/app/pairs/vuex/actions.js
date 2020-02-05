@@ -6,10 +6,3 @@ export const getPairsLog = ({commit}) => {
   })
   
 }
-
-export const getServerData = ({commit}) => {
-  return axios.get(THE_BASE_URL + '/monitoring/data').then((response) => {
-    commit('setServerData', response.data)
-  })
-  
-}

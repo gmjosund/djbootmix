@@ -1,9 +1,14 @@
 <template>
+  <div>
+    <button class='float-left btn btn-primary btn-email btn-sm'
+     v-bind:class="[tableId === 'salesLogs' ? 'add-sales-record': 'add-buys-record']"
+     v-if="tableId ==='salesLogs' || tableId ==='buyLogs'"
+     v-bind:data-type="[tableId === 'salesLogs' ? 'sales': 'buys']">{{tableId ==='salesLogs'? 'Add New Sales Record' : 'Add New Buys Record'}}</button>
    <table class= "table table-striped table-bordered"
     style="width: 100%"
     :id="[tableId]"
    >
-   </table>
+   </table></div>
 </template>
 
 <script>
@@ -13,12 +18,15 @@ import 'datatables.net-responsive';
 import 'datatables.net-buttons-bs4';
 import 'datatables.net-buttons';
 import Vue from 'vue';
-
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios'
+import { mapGetters } from 'vuex';
 import 'datatables.net-bs4/css/dataTables.bootstrap4.css';
 import 'datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css';
 import 'datatables.net-buttons-bs4/css/buttons.bootstrap4.css';
 import 'datatables.net-buttons/js/buttons.html5';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+import DataTableHelper from '../mixins/DataTableHelper'
+import DOMHelper from '../mixins/DOMHelper'
 
 window.JSZip = require('jszip');
 
@@ -52,6 +60,12 @@ export default {
         buttonOptions: {}
       }
    },
+   computed: {
+    ...mapGetters({
+      properties: "header/getPropertyLogs"
+    })
+  },
+   mixins: [DOMHelper, DataTableHelper],
    methods : {
       getColumnSum(colNum) {
         return this.dtInstance.column(colNum).data().sum();
@@ -92,11 +106,173 @@ export default {
           $(this.dtInstance.table().container())
         );
       },
+      updateColumnHeader(headerText, columnIndex) {
+        $(this.dtInstance.columns(columnIndex).header()).text(headerText);
+      },
       setDTPagination() {
         if (this.currentPagination && this.finalOpts.paging) {
           this.dtInstance.page(this.currentPagination).draw(false);
         }
       },
+      renderBuySellAlert() {
+        const vm = this;
+        // To render alert when we click on buy/sell button in datatable.
+        // add transalations for text
+        $("body").on(
+          "click",
+          ".buy-or-sell-btn, span[data-pair], .add-buys-record, .add-sales-record",
+          event => {
+            if (event.target.classList.contains("add-sales-record") || event.target.classList.contains("add-buys-record")) { 
+              var html = this.getSwalContent(event);
+              this.renderBuyorSellModal(event.target.dataset.type,html);
+            }
+
+            if (event.target.classList.contains("cancel-pending")) {
+              this.renderAlertBox(
+                `Cancle ${event.target.dataset.pair}`,
+                `Are you sure you want to cancel the open order#${event.target.dataset.orderNumber}${event.target.dataset.pair}`,
+                "warning",
+                `Cancel order #${event.target.dataset.orderNumber}`,
+                `Exit`
+              ).then(value => {
+                var request = {
+                  vm: vm,
+                  pairName: event.target.dataset.pair,
+                  orderNumber: event.target.dataset.orderNumber
+                }
+
+                if (result.value) {
+                  vm.$store.dispatch('header/cancelPending', request);
+                }
+              });
+              return;
+            }
+            if (event.target.classList.contains("pending-btn")) {
+              this.renderAlertBox(
+                `Send ${event.target.dataset.pair} To Pending?`,
+                `Enter a target price for the pair`,
+                "warning",
+                `Cancel`,
+                `Cancel`,
+                `text`,
+                `${event.target.dataset.avgPrice}`
+              ).then(result => {
+                var request = {
+                  vm: vm,
+                  pairName: event.target.dataset.pair,
+                  targetPrice: result.value
+                };
+
+                if (result.value) {
+                  vm.$store.dispatch('header/enterPending', request);
+                }
+              });
+            }
+            if (event.target.classList.contains("buy-or-sell-btn")) {
+              let isMarketOrderSupported =
+                typeof this.serverSettings === "undefined"
+                  ? true
+                  : this.serverSettings.isMarketOrderSupported;
+              let buyOrSell = event.target.dataset.buyOrSell;
+              let testMode =
+                typeof this.serverSettings === "undefined"
+                  ? true
+                  : this.serverSettings.testMode;
+              if (isMarketOrderSupported && !testMode) {
+                this.renderAlertBox(
+                  `${event.target.dataset.buyOrSell.toUpperCase()} ${
+                    event.target.dataset.pair
+                  }?`,
+                  `Are you sure you want to ${event.target.dataset.buyOrSell} ${event.target.dataset.pair}?`,
+                  "warning",
+                  `Cancel ${event.target.dataset.pair}`,
+                  `${event.target.dataset.buyOrSell.toUpperCase()}`,
+                  "select"
+                ).then(result => {
+                  var request = {
+                    vm: vm,
+                    pair: event.target.dataset.pair,
+                    buyOrSell: event.target.dataset.buyOrSell,
+                    executionType: result.value
+                  }
+
+                  if (result.value) {
+                    vm.$store.dispatch('header/buyOrSellPair', request);
+                  }
+                });
+              } else {
+                this.renderAlertBox(
+                  `${event.target.dataset.buyOrSell.toUpperCase()} ${
+                    event.target.dataset.pair
+                  }?`,
+                  `Are you sure you want to ${event.target.dataset.buyOrSell} ${event.target.dataset.pair}?`,
+                  "warning",
+                  `Cancel ${event.target.dataset.pair}`,
+                  `${event.target.dataset.buyOrSell.toUpperCase()}`
+                ).then(result => {
+                  var request = {
+                    vm: vm,
+                    pair: event.target.dataset.pair,
+                    buyOrSell: event.target.dataset.buyOrSell,
+                    executionType: "IOC"
+                  }
+
+                  if(result.value){
+                    vm.$store.dispatch('header/buyOrSellPair', request);
+                  }
+                });
+              }
+            }
+            if (event.target.classList.contains("boughtCost-btn")) {
+              this.renderAlertBox(
+                `${event.target.dataset.boughtcost.toUpperCase()} ${
+                  event.target.dataset.pair
+                }`,
+                `You can find the formatting of the bought cost command in our wiki. Check the link in the footer.`,
+                "warning",
+                `Cancel ${event.target.dataset.pair}`,
+                `${event.target.dataset.boughtcost.toUpperCase()}`,
+                `text`,
+                `${event.target.dataset.avgPrice}`
+              ).then(result => {
+                var boughtCost = event.target.dataset.pair + '_bought_price='+result.value
+                var request = {
+                  vm: vm,
+                  filename: "HOTCONFIG",
+                  fileData: boughtCost,
+                  configName: this.properties.activeConfig
+                }
+
+                if (result.value) {
+                  vm.$store.dispatch('header/boughtCost', request);
+                }
+              });
+            }
+            if (event.target.classList.contains("reserve-btn")) {
+              this.renderAlertBox(
+                `Reserve an amount of ${event.target.dataset.pair}`,
+                `Reserve an amount of`,
+                "warning",
+                `Cancel ${event.target.dataset.pair}`,
+                `Reserve`,
+                `text`,
+                `${event.target.dataset.amount}`
+              ).then(result => {
+                var request = {
+                  vm: vm,
+                  pair: event.target.dataset.pair,
+                  amount: result.value
+                }
+
+                if (result.value) {
+                  vm.$store.dispatch('header/reserveAmount', request);
+                }
+              });
+            }
+            return;
+          }
+        );
+      }
    },
    mounted() {
      try {
@@ -121,6 +297,7 @@ export default {
       this.options
     );
     this.updateData(this.tableData);
+    this.renderBuySellAlert();
    },
    beforeDestroy() {
 
@@ -131,6 +308,7 @@ export default {
 
      this.dtInstance = null;
      this.options = {};
+     $('body').off('click', '.buy-or-sell-btn');
    }
 }
 </script>
@@ -139,12 +317,17 @@ export default {
 .dt-buttons {
   float: right !important;
 }
-.blue-color, 
-.buy-strategy,
-.sell-strategy,
-.current-value,
-.buy-value,
-.trigger {
-  color: #98a6ad !important;
+
+#dtDcaLogs td.strat-current-val,
+#dtPossibleBuysLog td.current-value,
+#dtPairsLogs td.current-value,
+#dtSalesLog td.current-value,
+#dtBuyLog td.current-value {
+  color: rgba(255, 215, 0, 0.75);
+}
+
+.dataTables_filter,
+.dataTables_length {
+  color: #98a6ad;
 }
 </style>

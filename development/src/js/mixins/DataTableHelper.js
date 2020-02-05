@@ -1,29 +1,24 @@
 import chroma from 'chroma-js';
-import axios from 'axios'
 import $ from 'jquery';
-import {mapActions, mapGetters } from 'vuex'
 import DateTimeHelper from '../mixins/DateTimeHelper';
 import { DEFAULT_PRECISION, PROFIT_GREEN, POSITIVE_CLASS, NEGATIVE_CLASS,
   BASE_CURRENCY, HIDE_PROFIT_MARKET_AND_ESTIMATED_USD, DEFAULT_VALUE,
   POSITIVE_CLASS_TEXT, NEGATIVE_CLASS_TEXT, POSITIVE_BADGE, NEGATIVE_BADGE
 } from '../helpers/constants';
 import dataTable from '../components/dataTable';
-import monitoring from '../app/monitoring/components/Monitoring'
+import Store from '../vuex/index'
 
 
 export default {
   components: {
     dataTable,
-    monitoring
   },  
   mixins: [DateTimeHelper],
   computed: {
     dtCache() {
-      var serverData = [];
-      serverData = this.$store.state.pairs.serverData;
-      serverData = this.$store.state.possibleBuys.serverData;
-      
+      var serverData = Store.state.header.properties;
       const tmpData = {
+        exchange: serverData.exchange,
         marketingSite: serverData.exchangeUrl,
         timeZoneOffset: serverData.timeZoneOffset,
         market: serverData.market,
@@ -40,12 +35,11 @@ export default {
         getOnlyCurrCurrencyValForSalesLog: this.getCurrentValueForSalesLog(false, true),
       };
 
-      tmpData[`${serverData.market}USDTPrice`] = this.$store.state[`${serverData.market}USDTPrice`];
+      tmpData[`${serverData.market}USDTPrice`] = Store.state.header.properties[`${serverData.market}USDTPrice`];
       return tmpData;
     },
   },
   data: () => ({
-    ServerData: [],
     DISPLAY_TYPES: ['filter', 'display', 'export', 'sort'],
     MAX_TAM_PRECISION: 4,
     MAX_BUY_BOUGHT_AMNT_PRECISION: 8,
@@ -175,9 +169,10 @@ export default {
         if (typeof parentProperty !== 'undefined' && typeof row[parentProperty] === 'undefined') {
           return DEFAULT_VALUE;
         }
-        const colData = parentProperty ? row[parentProperty][propName] : row[propName];
+        var colData = parentProperty ? row[parentProperty][propName] : row[propName];
+        colData = typeof colData === 'object' ? colData : new Date(colData * 1000);
         // TODO: Have to add '+00:00' to date to specify it is in UTC timezone.
-        const dt = that.getDateObj(colData, that.dtCache.timeZoneOffset);
+        const dt = that.getDateObj(colData, that.dtCache.timeZoneOffset, true);
         if (!dt) {
           return DEFAULT_VALUE;
         }
@@ -280,7 +275,7 @@ export default {
       let currentValString = '';
       // TODO: Check why we are receiving type as a type.
       if (type === this.SORT_OP || type === 'type') {
-        return this.checkAndAddPrecision(data[0].currentValue, type, data[0].decimals);
+        return this.checkAndAddPrecision(data[0] ? data[0].currentValue : '', type, data[0] ? data[0].decimals : '');
       }
       // Loop over strategies array.
       for (let i = 0; i < data.length; i += 1) {
@@ -356,7 +351,7 @@ export default {
       let entryValString = '';
       // TODO: Check why we are receiving type as a type.
       if (type === this.SORT_OP || type === 'type') {
-        return this.checkAndAddPrecision(data[0].entryValue, type, data[0].decimals);
+        return this.checkAndAddPrecision(data.length ? data[0].entryValue : '', type, data.length ? data[0].decimals : '');
       }
       // Loop over strategies array.
       for (let i = 0; i < data.length; i += 1) {
@@ -387,7 +382,7 @@ export default {
     },
     handleProfit(data, type) {
       const profit = this.handleMoney(data, type);
-      const profitClass = +profit < PROFIT_GREEN ? 'danger' : 'success';
+      const profitClass = +profit < PROFIT_GREEN ? 'light-danger' : 'light-success';
       const profitString = `<span class="badge badge-${profitClass}">${profit}</span>`;
       return profitString;
     },
@@ -475,8 +470,8 @@ export default {
       let orderbookProfit = +data.orderbookProfit > 0 ? data.orderbookProfit : '';
       orderbookProfit = this.handleMoney(orderbookProfit, type);
       const profitClass = +profit < PROFIT_GREEN ? 'danger' : 'success';
-      let profitString = `<span class="badge badge-${profitClass}">${
-        profit}</span><br><span class="badge badge-success order-profit">${orderbookProfit}</span>`;
+      let profitString = `<span class="badge badge-light-${profitClass}">${
+        profit}</span><br><span class="badge badge-light-success order-profit">${orderbookProfit}</span>`;
       profitString = this.replaceBreakTag(profitString, type);
       return profitString;
     },
@@ -752,16 +747,16 @@ export default {
       will be displayed in excel sheet. */
       let exportDateColumns = [
         {
-         // title: this.$t('dataTableSection.date.colName'),
+          title: 'date',
           data: this.dateHandler(property, parentProperty, true),
           visible: false
         },
         {
-          // title: this.$t('dataTableSection.time.colName'),
+          title: 'time',
           data: this.dateHandler(property, parentProperty, false, true),
           visible: false
         }, {
-          // title: this.$t('dataTableSection.timeSince.colName'),
+          title: 'timeSince',
           data: this.dateHandler(property, parentProperty, false, false, true),
           visible: false
         }

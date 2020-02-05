@@ -8,7 +8,7 @@
           <span class="full-text">Current Value</span>
         </td>
         <td class="text-primary table-nowrap">{{ dcaCalculations.currentValue }}<span
-          class="current-currency-values"> ($0.00)<span></span></span></td>
+          class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{dcaCalculations.currentValue | getValueInCurrentCurrency(getProperties,2)}}<span></span></span></td>
       </tr>
       <tr>
         <td class="text-dark table-nowrap">
@@ -16,7 +16,7 @@
         </td>
         <td id="pairsLogDifference" class="text-dark table-nowrap">
           <span class="percentage" :class="percentageCalculation(dcaCalculations.currentValue, dcaCalculations.totalCost) >= '0.00' ? 'text-success' : 'text-danger'"> ({{ percentageCalculation(dcaCalculations.currentValue, dcaCalculations.totalCost) }} %)</span>
-          <span class="value">{{ (dcaCalculations.currentValue - dcaCalculations.totalCost).toFixed(8) }}<span class="current-currency-values"> ($0.00)</span></span>
+          <span class="value">{{ (dcaCalculations.currentValue - dcaCalculations.totalCost).toFixed(8) }}<span class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{(dcaCalculations.currentValue - dcaCalculations.totalCost).toFixed(8) | getValueInCurrentCurrency(getProperties,2)}}</span></span>
         </td>
       </tr>
       <tr>
@@ -24,7 +24,7 @@
           <span class="full-text">Total Cost</span>
         </td>
         <td class="text-success table-nowrap">{{ dcaCalculations.totalCost }}<span
-          class="current-currency-values"> ($0.00)<span></span></span></td>
+          class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{dcaCalculations.totalCost | getValueInCurrentCurrency(getProperties,2)}}<span></span></span></td>
       </tr>
       </tbody>
     </table>
@@ -46,6 +46,7 @@
     computed: {
       ...mapGetters({
         dcaCalculations: 'dca/dcaCalculations',
+        getProperties: 'header/getPropertyLogs',
       })
     }
   }

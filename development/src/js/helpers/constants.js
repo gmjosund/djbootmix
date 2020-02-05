@@ -39,6 +39,8 @@ export const HIDE_PROFIT_MARKET_AND_ESTIMATED_USD = 'USDT';
 export const BASE_CURRENCY = 'USD';
 export const BASE_CURRENCY_SYMBOL = '$';
 export const BASE_CURRENCY_NAME = 'United States Dollar';
+export const BADGE_SUCCESS = 'badge badge-light-success';
+export const BADGE_DANGER = 'badge-light-danger'
 
 // DT helper constants
 export const PROFIT_GREEN = 0;
