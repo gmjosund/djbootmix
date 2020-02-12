@@ -14,8 +14,10 @@
         <td class="text-dark table-nowrap">
           <span class="full-text">Difference</span>
         </td>
-        <td id="pairsLogDifference" class="text-dark table-nowrap">
-          <span class="percentage" :class="percentageCalculation(pendingCalculations.currentValue, pendingCalculations.targetValue) >= '0.00' ? 'text-success' : 'text-danger'"> ({{ percentageCalculation(pendingCalculations.currentValue, pendingCalculations.targetValue) }} %)</span>
+        <td id="pairsLogDifference" 
+          class="text-dark table-nowrap">
+          <span class="percentage" 
+            :class="percentageCalculation(pendingCalculations.currentValue, pendingCalculations.targetValue) >= '0.00' ? 'text-success' : 'text-danger'"> ({{ percentageCalculation(pendingCalculations.currentValue, pendingCalculations.targetValue) }} %)</span>
           <span class="value">{{ (pendingCalculations.currentValue - pendingCalculations.targetValue).toFixed(8) }}<span class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{(pendingCalculations.currentValue - pendingCalculations.targetValue).toFixed(8) | getValueInCurrentCurrency(getProperties,2)}}</span></span>
         </td>
       </tr>
@@ -46,7 +48,7 @@
     computed: {
       ...mapGetters({
         pendingCalculations: 'pending/pendingCalculations',
-        getProperties: 'monitoring/getProperties',
+        getProperties: 'header/getPropertyLogs',
       })
     }
   }

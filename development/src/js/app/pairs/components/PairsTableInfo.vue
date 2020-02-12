@@ -14,8 +14,10 @@
         <td class="text-dark table-nowrap">
           <span class="full-text">Difference</span>
         </td>
-        <td id="pairsLogDifference" class="text-dark table-nowrap">
-          <span class="percentage" :class="percentageCalculation(pairsCalculations.currentValue, pairsCalculations.boughtCost) >= '0.00' ? 'text-success' : 'text-danger'"> ({{ percentageCalculation(pairsCalculations.currentValue, pairsCalculations.boughtCost) }} %)</span>
+        <td id="pairsLogDifference" 
+          class="text-dark table-nowrap">
+          <span class="percentage" 
+            :class="percentageCalculation(pairsCalculations.currentValue, pairsCalculations.boughtCost) >= '0.00' ? 'text-success' : 'text-danger'"> ({{ percentageCalculation(pairsCalculations.currentValue, pairsCalculations.boughtCost) }} %)</span>
           <span class="value">{{ (pairsCalculations.currentValue - pairsCalculations.boughtCost).toFixed(8) }}<span class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{(pairsCalculations.currentValue - pairsCalculations.boughtCost).toFixed(8) | getValueInCurrentCurrency(getProperties,2)}}</span></span>
         </td>
       </tr>

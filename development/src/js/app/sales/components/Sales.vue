@@ -35,6 +35,7 @@
     },
     mixins: [DOMHelper, DataTableHelper],
     beforeRouteEnter (to, from, next) { 
+      Store.dispatch('sales/getSalesLog');
       Store.dispatch('header/getMiscLogs');
       Store.dispatch('header/getCurrencies');
       Store.dispatch('header/getPropertyLogs').finally((response) => {
@@ -165,6 +166,7 @@
         sales: 'sales/salesLog',
         salesAmount: 'sales/salesAmount',
         currency: 'header/currency',
+        market: 'header/market'
       })
     },
     beforeMount() {
@@ -180,6 +182,21 @@
         filename: 'sales-log-',
         text: 'Excel',
       }];
+    },
+    watch: {
+      sales: function sales() {
+        this.datatableReference.updateData(this.sales);
+        this.datatableReference.addButtons(this.buttonOptions);
+      },
+      currency: function currency() {
+        this.datatableReference.updateColumnHeader(this.currency, [8, 17, 15, 18]);
+        let dtInstance = this.datatableReference.dtInstance;
+        this.hideCurrencyValues(dtInstance, [8, 17]);
+      },
+      market: function market() {
+        const headerText = this.$t('salesLogSection.profitMarket.colName', { market: this.market });
+        this.datatableReference.updateColumnHeader(headerText, [7]);
+      }
     },
     methods: {
       getDataTableOptions() {

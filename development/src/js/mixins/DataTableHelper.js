@@ -394,7 +394,7 @@ export default {
       }
       return data;
     },
-    handleAvgValAndCurrentPrice(onlyCurrentPrice, onlyAvgPrice) {
+    handleAvgValAndCurrentPrice(onlyCurrentPrice, onlyAvgPrice, displayTargetPrice) {
       const that = this;
       return function cbhandleAvgValAndCurrentPrice(data, type, row) {
         const avgPrice = that.handleAvgPrice(data, type, row);
@@ -405,6 +405,19 @@ export default {
           }
           if (onlyAvgPrice) {
             return avgPrice;
+          }
+          if (displayTargetPrice){
+            var targetPrice = that.normalizeValueWithCommas(
+              data.targetPrice,
+              type,
+              '',
+              '',
+              '',
+              that.dtCache.currentMarketPrecision
+            );
+            var returnValue ='<span class="boughtCost">' + avgPrice + '</span>';
+            returnValue =  returnValue + '<br><span class="boughtCost">' + currentPrice + '</span>';
+            return returnValue + '<br><span class="targetPrice">' + targetPrice + '</span>';
           }
           return `${currentPrice}<br>${avgPrice}`;
         }
@@ -420,6 +433,12 @@ export default {
         const currentValue = that.getCurrentValue(onlyValue, onlyConvertedValue)(data, type, row);
         if (type === 'display' || type === 'export') {
           const totalCost = that.handleTotalCost(onlyValue, onlyConvertedValue)(data, type, row);
+          var targetValue = that.handleTargetValue(onlyValue, onlyConvertedValue)(data, type, row);
+          if (targetValue) {
+            return (
+              `<span class="bought-cost blue-color">${totalCost}</span><br><span class="current-value blue-color">${currentValue}</span><br><span class="tager-value blue-color">${targetValue}</span>`
+            );
+          }
           return `<span class="current-value blue-color">${currentValue}</span><br><span class="bought-cost blue-color">${totalCost}</span>`;
         }
         return currentValue;
@@ -767,6 +786,23 @@ export default {
       }
 
       return columns;
+    },
+    handleTargetValue(onlyCurrentValue, onlyConvertedCurrentValue) {
+      const that = this;
+      return function(data, type) {
+        var targetValue = data.targetValue ? data.targetValue : '';
+        // If total cost is not set then show empty column.
+        if (typeof targetValue === 'undefined' || targetValue === '') {
+          return '';
+        }
+  
+        return that.getValueBasedOnParams(
+          targetValue,
+          type,
+          onlyCurrentValue,
+          onlyConvertedCurrentValue
+        );
+      };
     },
     hideCurrencyValues(dataTable, hideColumnsArr) {
       let showCurrencyColumns = true;

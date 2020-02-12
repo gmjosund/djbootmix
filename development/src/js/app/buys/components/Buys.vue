@@ -28,6 +28,7 @@
     },
     mixins: [DOMHelper, DataTableHelper],
     beforeRouteEnter (to, from, next) { 
+      Store.dispatch('buys/getBuysLog');
       Store.dispatch('header/getMiscLogs');
       Store.dispatch('header/getCurrencies');
       Store.dispatch('header/getPropertyLogs').finally((response) => {
@@ -160,6 +161,11 @@
         filename: 'buy-log-',
         text: 'Excel',
       }];
+    },
+    watch: {
+      buys: function buys() {
+        this.$refs.wrapper.updateData(this.buys);
+      }
     },
     methods: {
       getDataTableOptions() {

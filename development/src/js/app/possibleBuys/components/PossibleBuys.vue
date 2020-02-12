@@ -31,6 +31,7 @@
     },
     mixins: [DOMHelper, DataTableHelper],
     beforeRouteEnter (to, from, next) { 
+      Store.dispatch('possibleBuys/getPossibleBuysLog');
       Store.dispatch('header/getMiscLogs');
       Store.dispatch('header/getCurrencies');
       Store.dispatch('header/getPropertyLogs').finally((response) => {

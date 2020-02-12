@@ -14,8 +14,10 @@
         <td class="text-dark table-nowrap">
           <span class="full-text">Difference</span>
         </td>
-        <td id="pairsLogDifference" class="text-dark table-nowrap">
-          <span class="percentage" :class="percentageCalculation(dcaCalculations.currentValue, dcaCalculations.totalCost) >= '0.00' ? 'text-success' : 'text-danger'"> ({{ percentageCalculation(dcaCalculations.currentValue, dcaCalculations.totalCost) }} %)</span>
+        <td id="pairsLogDifference" 
+          class="text-dark table-nowrap">
+          <span class="percentage" 
+            :class="percentageCalculation(dcaCalculations.currentValue, dcaCalculations.totalCost) >= '0.00' ? 'text-success' : 'text-danger'"> ({{ percentageCalculation(dcaCalculations.currentValue, dcaCalculations.totalCost) }} %)</span>
           <span class="value">{{ (dcaCalculations.currentValue - dcaCalculations.totalCost).toFixed(8) }}<span class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{(dcaCalculations.currentValue - dcaCalculations.totalCost).toFixed(8) | getValueInCurrentCurrency(getProperties,2)}}</span></span>
         </td>
       </tr>

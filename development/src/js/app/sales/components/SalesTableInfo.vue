@@ -14,8 +14,10 @@
         <td class="text-dark table-nowrap">
           <span class="full-text">Difference</span>
         </td>
-        <td id="pairsLogDifference" class="text-dark table-nowrap">
-          <span class="percentage" :class="percentageCalculation(salesCalculations.soldValue, salesCalculations.boughtCost) >= '0.00' ? 'text-success' : 'text-danger'"> ({{ percentageCalculation(salesCalculations.soldValue, salesCalculations.boughtCost) }} %)</span>
+        <td id="pairsLogDifference" 
+          class="text-dark table-nowrap">
+          <span class="percentage" 
+            :class="percentageCalculation(salesCalculations.soldValue, salesCalculations.boughtCost) >= '0.00' ? 'text-success' : 'text-danger'"> ({{ percentageCalculation(salesCalculations.soldValue, salesCalculations.boughtCost) }} %)</span>
           <span class="value">{{ (salesCalculations.soldValue - salesCalculations.boughtCost).toFixed(8) }}<span class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{(salesCalculations.soldValue - salesCalculations.boughtCost).toFixed(8) | getValueInCurrentCurrency(getProperties,2)}}</span></span>
         </td>
       </tr>
@@ -46,7 +48,7 @@
     computed: {
       ...mapGetters({
 				salesCalculations: 'sales/salesCalculations',
-				getProperties: 'monitoring/getProperties',
+				getProperties: 'header/getPropertyLogs',
       })
     }
   }

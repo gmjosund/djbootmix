@@ -32,6 +32,7 @@
     },
     mixins: [DOMHelper, DataTableHelper],
     beforeRouteEnter (to, from, next) { 
+      Store.dispatch('pending/getPendingLog');
       Store.dispatch('header/getMiscLogs');
       Store.dispatch('header/getCurrencies');
       Store.dispatch('header/getPropertyLogs').finally((response) => {
@@ -58,9 +59,9 @@
             className: 'sell-strategy',
           },
           {
-            title: 'Cur.Price <br> Target Price',
+            title: 'Cur.Value <br> Average Price <br> Target Price',
             tooltip: 'pendingSection.currPricetargetPrice.colTitle',
-            data: this.handleAvgValAndCurrentPrice(),
+            data: this.handleAvgValAndCurrentPrice(false, false, true),
             responsivePriority: 1,
             className: 'text-right target-price',
           },
@@ -100,7 +101,7 @@
             className: 'text-right total-amount',
           },
           {
-            title: 'Cur.Value <br> Target Price',
+            title: 'Cur.Value <br> Average Price <br> Target Price',
             tooltip: 'pendingSection.currVal.colTitle',
             data: this.getCurrentValAndTotalCost(true),
             responsivePriority: 2,

@@ -32,6 +32,7 @@
     },
     mixins: [DOMHelper, DataTableHelper],
     beforeRouteEnter (to, from, next) { 
+      Store.dispatch('dca/getDcaLog');
       Store.dispatch('header/getMiscLogs');
       Store.dispatch('header/getCurrencies');
       Store.dispatch('header/getPropertyLogs').finally((response) => {
@@ -103,7 +104,7 @@
             className: 'text-right strat-entry-val'
           },
           {
-            title: 'sellStrat',
+            title: 'Sell',
             data: 'sellStrategies',
             tooltip: 'dcaLogSection.sellStrat.colTitle',
             render: this.renderStrategy,
@@ -111,7 +112,7 @@
             className: 'sell-strategy'
           },
           {
-            title: 'sellStratVal',
+            title: 'SSV',
             data: 'sellStrategies',
             tooltip: 'dcaLogSection.sellStratVal.colTitle',
             render: this.checkAllValAndHandleStratCurVal,
@@ -119,7 +120,7 @@
             className: 'text-right current-value strat-current-val '
           },
           {
-            title: 'sellEntryVal',
+            title: 'SST',
             data: 'sellStrategies',
             tooltip: 'dcaLogSection.sellEntryVal.colTitle',
             render: this.checkAllValAndHandleStratEntryVal,
@@ -149,14 +150,14 @@
             className: 'text-right total-amount'
           },
           {
-            title: 'currVal',
+            title: 'Cur.Val<br>Tot.Cost',
             data: this.getCurrentValAndTotalCost(true),
             tooltip: 'dcaLogSection.currVal.colTitle',
             responsivePriority: 6,
             className: 'text-right blue-color current-value'
           },
           {
-            title: 'currVal',
+            title: 'Cur.Val<br>Tot.Cost',
             data: this.getCurrentValue(true),
             visible: false
           },

@@ -31,7 +31,8 @@
       TableInfo  
     },
     mixins: [DOMHelper, DataTableHelper],
-    beforeRouteEnter (to, from, next) { 
+    beforeRouteEnter (to, from, next) {
+      Store.dispatch('pairs/getPairsLog'); 
       Store.dispatch('header/getMiscLogs');
       Store.dispatch('header/getCurrencies');
       Store.dispatch('header/getPropertyLogs').finally((response) => {

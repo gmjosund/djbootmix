@@ -1,3 +1,5 @@
+import { DEFAULT_VALUE } from '../../../helpers/constants';
+
 export const getPropertyLogs = (state) => {
     return state.properties
   }
@@ -11,4 +13,11 @@ export const currency = state => {
     return DEFAULT_VALUE;
   }
   return state.properties.currency;
+};
+
+export const market = state => {
+  if (typeof state.serverData !== 'undefined' && typeof state.serverData.market !== 'undefined') {
+    return state.serverData.market;
+  }
+  return DEFAULT_VALUE;
 };
