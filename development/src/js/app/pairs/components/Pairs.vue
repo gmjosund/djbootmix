@@ -9,7 +9,9 @@
             v-bind:table-data="pairs"
             ref="wrapper"
           ></dataTable>
-          <TableInfo :amount="pairsAmount" :data="pairs"></TableInfo>
+          <TableInfo :amount="pairsAmount" 
+            :data="pairs">
+            </TableInfo>
         </b-card>
       </div>
     </div>
@@ -32,10 +34,12 @@
     },
     mixins: [DOMHelper, DataTableHelper],
     beforeRouteEnter (to, from, next) {
-      Store.dispatch('pairs/getPairsLog'); 
-      Store.dispatch('header/getMiscLogs');
-      Store.dispatch('header/getCurrencies');
-      Store.dispatch('header/getPropertyLogs').finally((response) => {
+      Promise.all([
+        Store.dispatch('pairs/getPairsLog'),
+        Store.dispatch('header/getMiscLogs'),
+        Store.dispatch('header/getCurrencies'),
+        Store.dispatch('header/getPropertyLogs')
+      ]).finally(() => {
         next();
       });
     },
@@ -44,46 +48,39 @@
         columns: [{
           title: 'Date',
           data: this.dateHandler('lastBoughtDate'),
-          tooltip: 'date.colTitle',
           className: 'date ',
           responsivePriority: 1,
         }, {
           title: 'Coin',
           data: 'market',
-          tooltip: 'coin.colTitle',
           className: 'market',
           render: this.renderCombinedMarketCol,
           responsivePriority: 1,
         }, {
           title: 'Sell',
           data: this.renderSellStrategyWithButton('sellStrategies', true),
-          tooltip: 'sellStrat.colTitle',
           className: 'sell-strategy',
           responsivePriority: 1,
         }, {
           title: 'SSV',
           data: 'sellStrategies',
-          tooltip: 'dataTableSection.stratVal.colTitle',
           render: this.handleStratCurrentVal,
           className: 'text-right current-value ',
           responsivePriority: 1,
         }, {
           title: 'SST',
           data: 'sellStrategies',
-          tooltip: 'dataTableSection.stratTrigger.colTitle',
           render: this.handleStratEntryVal,
           responsivePriority: 1,
           className: 'text-right trigger',
         }, {
           title: 'P%',
           data: this.handleOrderBookProfit,
-          tooltip: 'pairsLogSection.profit.colTitle',
           responsivePriority: 1,
           className: 'text-center profit',
         }, {
           title: 'Bid Price <br> Bought Price',
           data: this.handleAvgValAndCurrentPrice(),
-          tooltip: 'pairsLogSection.currPriceBoughtPrice.colTitle',
           className: 'text-right blue-color current-price',
           responsivePriority: 1,
         }, {
@@ -99,7 +96,6 @@
         }, {
           title: 'Current Value <br> Bought Cost',
           data: this.getCurrentValAndTotalCost(true),
-          tooltip: 'pairsLogSection.currValBoughtCost.colTitle',
           className: 'text-right blue-color current-value',
           responsivePriority: 1,
         }, {
@@ -109,7 +105,6 @@
           className: 'hide',
         }, {
           title: '<span class="api-currency"></span>',
-          tooltip: 'dataTableSection.currValCurrency.colTitle',
           data: this.getCurrentValue(false, true),
           responsivePriority: 1,
           className: 'text-right blue-color current-value  hide',
@@ -120,42 +115,36 @@
           className: 'hide',
         }, {
           title: '<span class="api-currency"> </span>',
-          tooltip: 'boughtCostCurrency',
           data: this.handleTotalCost(false, true),
           responsivePriority: 1,
           className: 'text-right blue-color bought-cost  hide',
         }, {
           title: '<span class="api-currency" ></span>',
-          tooltip: 'boughtCostCurrency.colTitle',
           data: this.getCurrentValAndTotalCost(false, true),
           className: 'text-right bought-cost currency-value',
           responsivePriority: 3,
         }, {
           title: 'VOL',
           data: 'volume',
-          tooltip: 'vol.colTitle',
           className: 'text-right volume',
           responsivePriority: 6,
           render: this.renderVolume,
         }, {
           title: 'TAM',
           data: this.handleTotalAmount,
-          tooltip: 'totalAmount',
           responsivePriority: 5,
           className: 'text-right total-amount',
         },{
-            title: 'Actions',
-            tooltip: 'Actions',
-            data: this.addActionButtons,
-            className: 'text-right'
-          }],
+          title: 'Actions',
+          data: this.addActionButtons,
+          className: 'text-right'
+        }],
         options: {
           order: [[8, 'desc']],
           fixedColumnsLength: 5,
         },
         summaryTableData: {},
-        buttonOptions: [],
-        datatableReference: {},
+        buttonOptions: []
       };
     },
     computed: {
@@ -181,6 +170,14 @@
         filename: 'pairs-log',
         text: 'Excel',
       }];
+    },
+    watch: {
+      pairs: function pairs() {
+        this.$refs.wrapper.updateData(this.pairs);
+      },
+      currency: function currency() {
+        this.$refs.wrapper.updateColumnHeader(this.currency, [17, 14, 16]);
+      }
     },
     methods: {
       percentageCalculation,

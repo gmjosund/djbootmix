@@ -9,7 +9,8 @@
             v-bind:table-data="pending"
             ref="wrapper"
           ></dataTable>
-           <TableInfo :amount="pendingAmount" :data="pending"></TableInfo>
+           <TableInfo :amount="pendingAmount"
+            :data="pending"></TableInfo>
         </b-card>
       </div>
     </div>
@@ -32,27 +33,33 @@
     },
     mixins: [DOMHelper, DataTableHelper],
     beforeRouteEnter (to, from, next) { 
-      Store.dispatch('pending/getPendingLog');
-      Store.dispatch('header/getMiscLogs');
-      Store.dispatch('header/getCurrencies');
-      Store.dispatch('header/getPropertyLogs').finally((response) => {
-        next();
-      });
+      Promise.all([
+        Store.dispatch('pending/getPendingLog'),
+        Store.dispatch('header/getMiscLogs'),
+        Store.dispatch('header/getCurrencies'),
+        Store.dispatch('header/getPropertyLogs')
+      ]).finally(() => {
+          next();
+      })
     },
     data() {
       return {
         columns: [
           {
             title: 'Coin',
-            tooltip: 'pendingSection.coin.colTitle',
             className: 'market',
             data: 'market',
             responsivePriority: 1,
             render: this.renderCombinedMarketCol,
           },
           {
+            title: '24H',
+            data: 'market',
+            className: 'hide',
+            render: this.renderPercentageChange
+          },
+          {
             title: 'Sell',
-            tooltip: 'pendingSection.sellStrat.colTitle',
             data: 'sellStrategies',
             render: this.renderStrategy,
             responsivePriority: 1,
@@ -60,7 +67,6 @@
           },
           {
             title: 'Cur.Value <br> Average Price <br> Target Price',
-            tooltip: 'pendingSection.currPricetargetPrice.colTitle',
             data: this.handleAvgValAndCurrentPrice(false, false, true),
             responsivePriority: 1,
             className: 'text-right target-price',
@@ -80,7 +86,6 @@
           {
             title: 'P%',
             data: 'profit',
-            tooltip: 'pendingSection.profit.colTitle',
             className: 'text-center profit',
             responsivePriority: 1,
             render: this.handleProfit,
@@ -88,7 +93,6 @@
           {
             title: 'CP%',
             data: 'combinedProfit',
-            tooltip: 'pendingSection.comboProfit.colTitle',
             className: 'text-center profit',
             render: this.handleMoney,
             responsivePriority: 1,
@@ -96,13 +100,11 @@
           {
             title: 'TAM',
             data: this.handleTotalAmount,
-            tooltip: 'pendingSection.totalAmount.colTitle',
             responsivePriority: 3,
             className: 'text-right total-amount',
           },
           {
             title: 'Cur.Value <br> Average Price <br> Target Price',
-            tooltip: 'pendingSection.currVal.colTitle',
             data: this.getCurrentValAndTotalCost(true),
             responsivePriority: 2,
             className: 'text-right blue-color current-value',
@@ -131,14 +133,12 @@
           },
           {
             title: '<span class="api-currency"> </span>',
-            tooltip: 'pendingSection.targetCurrentValCurrency.colTitle',
             data: this.getCurrentValAndTotalCost(false, true),
             responsivePriority: 1,
             className: 'text-right blue-color current-value currency-value',
           },
           {
             title: 'Actions',
-            tooltip: 'Actions',
             data: this.addActionButtons,
             className: 'text-right'
           }
@@ -148,8 +148,7 @@
           fixedColumnsLength: 1,
         },
         summaryTableData: {},
-        buttonOptions: [],
-        datatableReference: {},
+        buttonOptions: []
       };
     },
     computed: {
@@ -172,6 +171,14 @@
         text: 'Excel',
       }];
     },
+    watch: {
+      pending: function pending() {
+        this.$refs.wrapper.updateData(this.pending);
+      },
+      currency: function currency() {
+        this.$refs.wrapper.updateColumnHeader(this.currency, [14, 11, 13]);
+      }
+    },
     methods: {
       getDataTableOptions() {
         const isResponsive = this.isResponsive();
@@ -187,7 +194,7 @@
       },
     },
     mounted() {
-      this.$refs.wrapper.updateColumnHeader(this.currency, [13, 10, 12]);
+      this.$refs.wrapper.updateColumnHeader(this.currency, [14, 11, 13]);
     }
   }
 </script>

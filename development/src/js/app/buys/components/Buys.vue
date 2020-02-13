@@ -28,26 +28,26 @@
     },
     mixins: [DOMHelper, DataTableHelper],
     beforeRouteEnter (to, from, next) { 
-      Store.dispatch('buys/getBuysLog');
-      Store.dispatch('header/getMiscLogs');
-      Store.dispatch('header/getCurrencies');
-      Store.dispatch('header/getPropertyLogs').finally((response) => {
+     Promise.all([
+        Store.dispatch('buys/getBuysLog'),
+        Store.dispatch('header/getMiscLogs'),
+        Store.dispatch('header/getCurrencies'),
+        Store.dispatch('header/getPropertyLogs')
+      ]).finally(() => {
         next();
-      });
+      })
     },
     data() {
        return {
         columns: [
           {
             title: 'Date',
-            tooltip: 'buyLogSection.date.colTitle',
             data: this.dateHandler('lastBoughtDate'),
             responsivePriority: 1,
             className: 'date'
           },
           {
             title: 'Coin',
-            tooltip: 'buyLogSection.coin.colTitle',
             data: 'market',
             className: 'market',
             render: this.renderMarketCol,
@@ -55,7 +55,6 @@
           },
           {
             title: 'Order Number',
-            tooltip: 'buyLogSection.order.colTitle',
             data: 'orderNumber',
             responsivePriority: 1,
             render: this.renderDataIfPresent,
@@ -63,7 +62,6 @@
           },
           {
             title: 'Buy Type',
-            tooltip: 'buyLogSection.buyType.colTitle',
             data: 'type',
             className: 'buy-type',
             responsivePriority: 3,
@@ -71,7 +69,6 @@
           },
           {
             title: 'Buy',
-            tooltip: 'buyLogSection.buy.colTitle',
             data: 'buyStrategies',
             responsivePriority: 2,
             render: this.renderStrategyForBuyLog,
@@ -79,28 +76,24 @@
           },
           {
             title: 'Bought Price',
-            tooltip: 'buyLogSection.boughtPrice.colTitle',
             data: this.handleBoughtPrice(),
             responsivePriority: 1,
             className: 'bought-price text-right blue-color'
           },
           {
             title: 'Bought Cost',
-            tooltip: 'buyLogSection.boughtCost.colTitle',
             data: this.handleTotalCost(true),
             responsivePriority: 1,
             className: 'text-right'
           },
           {
             title: 'Bought Amount',
-            tooltip: 'buyLogSection.boughtAmount.colTitle',
             data: this.handleBuyLogBoughtAmnt,
             responsivePriority: 1,
             className: 'text-right'
           },
           {
             title: 'VOL',
-            tooltip: 'buyLogSection.volume.colTitle',
             data: 'volume',
             className: 'text-right volume',
             responsivePriority: 4,
@@ -108,7 +101,6 @@
           },
           {
             title: 'BSV',
-            tooltip: 'buyLogSection.buyStratValue.colTitle',
             data: 'buyStrategies',
             responsivePriority: 1,
             className: 'text-right blue-color current-value',
@@ -116,7 +108,6 @@
           },
           {
             title: 'BST',
-            tooltip: 'buyLogSection.buyStratTrigger.colTitle',
             data: 'buyStrategies',
             responsivePriority: 1,
             className: 'text-right buy-value',
@@ -124,7 +115,6 @@
           },
           {
             title: 'BSL',
-            tooltip: 'buyLogSection.buyStrategyLimit.colTitle',
             data: 'buyStrategies',
             className: 'text-right',
             responsivePriority: 1,
@@ -138,8 +128,7 @@
           searching: true,
           dom: 'lfrtipB'
         },
-        buttonOptions: [],
-        datatableReference: {},
+        buttonOptions: []
       };
     },
     computed: {

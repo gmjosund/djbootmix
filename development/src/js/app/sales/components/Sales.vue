@@ -9,7 +9,8 @@
             v-bind:table-data="sales"
             ref="wrapper"
           ></dataTable>
-          <TableInfo :amount="salesAmount" :data="sales"></TableInfo>
+          <TableInfo :amount="salesAmount"
+           :data="sales"></TableInfo>
         </b-card>
       </div>
     </div>
@@ -35,19 +36,20 @@
     },
     mixins: [DOMHelper, DataTableHelper],
     beforeRouteEnter (to, from, next) { 
-      Store.dispatch('sales/getSalesLog');
-      Store.dispatch('header/getMiscLogs');
-      Store.dispatch('header/getCurrencies');
-      Store.dispatch('header/getPropertyLogs').finally((response) => {
+      Promise.all([
+        Store.dispatch('sales/getSalesLog'),
+        Store.dispatch('header/getMiscLogs'),
+        Store.dispatch('header/getCurrencies'),
+        Store.dispatch('header/getPropertyLogs')
+      ]).finally(() => {
         next();
-      });
+      })
     },
     data() {
       return {
         columns: [
           {
             title: 'Date',
-            tooltip: 'salesLogSection.date.colTitle',
             data: this.dateHandler('soldDate'),
             responsivePriority: 1,
             className: 'date',
@@ -55,7 +57,6 @@
           {
             title: 'Coin',
             data: 'market',
-            tooltip: 'salesLogSection.coin.colTitle',
             className: 'market',
             render: this.renderMarketCol,
             responsivePriority: 1,
@@ -63,7 +64,6 @@
           {
             title: 'Sell',
             data: 'sellStrategies',
-            tooltip: 'salesLogSection.sellStrat.colTitle',
             responsivePriority: 1,
             render: this.renderSellStrategy,
             className: 'sell-strategy',
@@ -71,14 +71,12 @@
           {
             title: 'P%',
             data: 'profit',
-            tooltip: 'salesLogSection.profit.colTitle',
             responsivePriority: 1,
             className: 'text-center profit',
             render: this.handleProfit,
           },
           {
             title: 'Profit BTC',
-            tooltip: 'salesLogSection.profitMarket.colTitle',
             data: this.getProfitBTCForSalesLog,
             className: 'text-right profit-btc',
             responsivePriority: 1,
@@ -86,21 +84,18 @@
           {
             title: '<span class="api-currency"> </span>',
             data: this.getCurrentTrendprofit,
-            tooltip: 'salesLogSection.profitCurrency.colTitle',
             responsivePriority: 1,
             className: 'text-right profit-btc currency-value',
           },
           {
             title: 'SAM',
             data: 'soldAmount',
-            tooltip: 'salesLogSection.soldAmount.colTitle',
             responsivePriority: 5,
             className: 'text-right sold-amount',
           },
           {
             title: 'Bought Price <br> Sold Price',
             data: this.handleAvgPriceBoughtTimes(),
-            tooltip: 'salesLogSection.boughtSoldPrice.colTitle',
             responsivePriority: 4,
             className: 'text-right bought-price blue-color',
           },
@@ -117,7 +112,6 @@
           {
             title: 'Bought Cost <br> Sold Value',
             data: this.handleBoughtSoldCostForSalesLog,
-            tooltip: 'salesLogSection.boughtSoldValue.colTitle',
             responsivePriority: 3,
             className: 'text-right sold-value',
           },
@@ -139,7 +133,6 @@
           {
             title: '<span class="api-currency"> </span>',
             data: this.handleBoughtSoldCostCurrency,
-            tooltip: 'salesLogSection.boughtSoldValueCurrency.colTitle',
             responsivePriority: 2,
             className: 'sold-value text-right currency-value',
           },
@@ -157,8 +150,7 @@
           dom: 'lfrtipB',
         },
         summaryTableData: {},
-        buttonOptions: [],
-        datatableReference: {},
+        buttonOptions: []
       };
     },
     computed: {
@@ -185,17 +177,10 @@
     },
     watch: {
       sales: function sales() {
-        this.datatableReference.updateData(this.sales);
-        this.datatableReference.addButtons(this.buttonOptions);
+        this.$refs.wrapper.updateData(this.sales);
       },
       currency: function currency() {
-        this.datatableReference.updateColumnHeader(this.currency, [8, 17, 15, 18]);
-        let dtInstance = this.datatableReference.dtInstance;
-        this.hideCurrencyValues(dtInstance, [8, 17]);
-      },
-      market: function market() {
-        const headerText = this.$t('salesLogSection.profitMarket.colName', { market: this.market });
-        this.datatableReference.updateColumnHeader(headerText, [7]);
+        this.$refs.wrapper.updateColumnHeader(this.currency, [8, 17, 15, 18]);
       }
     },
     methods: {

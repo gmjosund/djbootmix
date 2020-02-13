@@ -9,7 +9,8 @@
             v-bind:table-data="dca"
             ref="wrapper"
           ></dataTable>
-          <TableInfo :amount="dcaAmount" :data="dca"></TableInfo>
+          <TableInfo :amount="dcaAmount"
+           :data="dca"></TableInfo>
         </b-card>
       </div>
     </div>
@@ -32,10 +33,12 @@
     },
     mixins: [DOMHelper, DataTableHelper],
     beforeRouteEnter (to, from, next) { 
-      Store.dispatch('dca/getDcaLog');
-      Store.dispatch('header/getMiscLogs');
-      Store.dispatch('header/getCurrencies');
-      Store.dispatch('header/getPropertyLogs').finally((response) => {
+      Promise.all([
+        Store.dispatch('dca/getDcaLog'),
+        Store.dispatch('header/getMiscLogs'),
+        Store.dispatch('header/getCurrencies'),
+        Store.dispatch('header/getPropertyLogs')
+      ]).finally(() => {
         next();
       });
     },
@@ -45,14 +48,12 @@
           {
             title: 'Date',
             data: this.renderDateForDCA(),
-            tooltip: 'dcaLogSection.date.colTitle',
             responsivePriority: 1,
             className: 'date'
           },
           {
             title: 'Coin',
             data: 'market',
-            tooltip: 'dcaLogSection.coin.colTitle',
             className: 'coinpair',
             responsivePriority: 1,
             render: this.renderCombinedMarketCol
@@ -66,7 +67,6 @@
           {
             title: 'Bid. Price <br> Avg. Price',
             data: this.handleAvgPriceDcaLog(),
-            tooltip: '.colTitle',
             responsivePriority: 2,
             className: 'text-right blue-color avg-price current-price'
           },
@@ -84,21 +84,18 @@
             title: 'Buy',
             data: this.renderBuyStrategy('buyStrategies', true),
             responsivePriority: 1,
-            tooltip: 'dcaLogSection.buyStrat.colName',
             className: 'buy-strategy'
           },
           {
             title: 'BST',
             data: 'buyStrategies',
             responsivePriority: 1,
-            tooltip: 'dcaLogSection.buyStratVal.colTitle',
             render: this.checkAllValAndHandleStratCurVal,
             className: 'text-right current-value strat-current-val '
           },
           {
             title: 'BSV',
             data: 'buyStrategies',
-            tooltip: 'dcaLogSection.buyEntryVal.colTitle',
             render: this.checkAllValAndHandleStratEntryVal,
             responsivePriority: 4,
             className: 'text-right strat-entry-val'
@@ -106,7 +103,6 @@
           {
             title: 'Sell',
             data: 'sellStrategies',
-            tooltip: 'dcaLogSection.sellStrat.colTitle',
             render: this.renderStrategy,
             responsivePriority: 1,
             className: 'sell-strategy'
@@ -114,7 +110,6 @@
           {
             title: 'SSV',
             data: 'sellStrategies',
-            tooltip: 'dcaLogSection.sellStratVal.colTitle',
             render: this.checkAllValAndHandleStratCurVal,
             responsivePriority: 1,
             className: 'text-right current-value strat-current-val '
@@ -122,7 +117,6 @@
           {
             title: 'SST',
             data: 'sellStrategies',
-            tooltip: 'dcaLogSection.sellEntryVal.colTitle',
             render: this.checkAllValAndHandleStratEntryVal,
             rresponsivePriority: 3,
             className: 'text-right strat-entry-val'
@@ -130,14 +124,12 @@
           {
             title: 'P%',
             data: this.handleOrderBookProfit,
-            tooltip: 'dcaLogSection.profit.colTitle',
             responsivePriority: 1,
             className: 'text-center profit'
           },
           {
             title: 'VOL',
             data: 'volume',
-            tooltip: 'dcaLogSection.vol.colTitle',
             className: 'text-right volume',
             responsivePriority: 8,
             render: this.renderVolume
@@ -145,14 +137,12 @@
           {
             title: 'TAM',
             data: this.handleTotalCost(true),
-            tooltip: 'dcaLogSection.totalAmount.colTitle',
             responsivePriority: 7,
             className: 'text-right total-amount'
           },
           {
             title: 'Cur.Val<br>Tot.Cost',
             data: this.getCurrentValAndTotalCost(true),
-            tooltip: 'dcaLogSection.currVal.colTitle',
             responsivePriority: 6,
             className: 'text-right blue-color current-value'
           },
@@ -163,7 +153,6 @@
           },
           {
             title: '<span class="api-currency"> </span>',
-            tooltip: 'dcaLogSection.currentTotalCstValCurrency.colTitle',
             data: this.getCurrentValAndTotalCost(false, true),
             responsivePriority: 5,
             className: 'text-right blue-color current-value currency-value'
@@ -176,7 +165,6 @@
           {
             title: 'TAM',
             data: this.handleTotalCost(true),
-            tooltip: 'dcaLogSection.totalCost.colTitle',
             className: 'text-right total-cost hide'
           },
           {
@@ -186,7 +174,6 @@
           },
           {
             title: 'Actions',
-            tooltip: 'actions',
             data: this.addActionButtons,
             className: 'text-right'
           }
@@ -196,8 +183,7 @@
           fixedColumnsLength: 8,
         },
         summaryTableData: {},
-        buttonOptions: [],
-        datatableReference: {},
+        buttonOptions: []
       };
     },
     computed: {
@@ -220,6 +206,14 @@
         filename: 'dca-log-',
         text: 'Excel',
       }];
+    },
+    watch: {
+      dca: function dca() {
+        this.$refs.wrapper.updateData(this.dca);
+      },
+      currency: function currency() {
+        this.$refs.wrapper.updateColumnHeader(this.currency, [22, 23, 25]);
+      }
     },
     methods: {
        getDataTableOptions() {
