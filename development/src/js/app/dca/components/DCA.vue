@@ -181,7 +181,6 @@
           order: [[19, 'desc']],
           fixedColumnsLength: 8,
         },
-        summaryTableData: {},
         buttonOptions: []
       };
     },

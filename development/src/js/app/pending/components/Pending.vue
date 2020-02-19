@@ -146,7 +146,6 @@
           order: [[5, 'desc']],
           fixedColumnsLength: 1,
         },
-        summaryTableData: {},
         buttonOptions: []
       };
     },

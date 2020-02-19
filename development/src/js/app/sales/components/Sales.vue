@@ -149,7 +149,6 @@
           searching: true,
           dom: 'lfrtipB',
         },
-        summaryTableData: {},
         buttonOptions: []
       };
     },
