@@ -57,6 +57,10 @@
           render: this.renderCombinedMarketCol,
           responsivePriority: 1,
         }, {
+          title: '24H % Change',
+          data: this.renderPercentageChange,
+          className: 'hide',
+        }, {
           title: 'Sell',
           data: this.renderSellStrategyWithButton('sellStrategies', true),
           className: 'sell-strategy',
@@ -176,7 +180,7 @@
         this.$refs.wrapper.updateData(this.pairs);
       },
       currency: function currency() {
-        this.$refs.wrapper.updateColumnHeader(this.currency, [17, 14, 16]);
+        this.$refs.wrapper.updateColumnHeader(this.currency, [15, 17, 18]);
       }
     },
     methods: {
@@ -197,7 +201,7 @@
       },
     },
     mounted() {
-      this.$refs.wrapper.updateColumnHeader(this.currency, [17, 14, 16]);
+      this.$refs.wrapper.updateColumnHeader(this.currency, [15, 17, 18]);
     }
   }
 </script>

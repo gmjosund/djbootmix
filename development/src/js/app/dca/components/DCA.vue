@@ -59,10 +59,9 @@
             render: this.renderCombinedMarketCol
           },
           {
-            title: '24H',
-            data: 'market',
+            title: '24H % Change',
+            data: this.renderPercentageChange,
             className: 'hide',
-            render: this.renderPercentageChange
           },
           {
             title: 'Bid. Price <br> Avg. Price',
@@ -198,7 +197,7 @@
       this.buttonOptions = [{
         extend: 'excel',
         exportOptions: {
-          columns: this.getExcelColumns(27, [0, 9, 21, 23], [12, 24, 26]),
+          columns: this.getExcelColumns(27, [0, 9, 21, 23, 27], [12, 24, 26]),
           orthogonal: 'export',
         },
         className: 'btn btn-dark',
@@ -212,7 +211,7 @@
         this.$refs.wrapper.updateData(this.dca);
       },
       currency: function currency() {
-        this.$refs.wrapper.updateColumnHeader(this.currency, [22, 23, 25]);
+        this.$refs.wrapper.updateColumnHeader(this.currency, [23, 24, 26]);
       }
     },
     methods: {
@@ -245,20 +244,6 @@
       getExportDateColumnsForDCA(columns, index, parentProperty) {
         let exportDateColumns = [
           {
-            title: 'firstDate',
-            data: this.renderDateForDCA(parentProperty, false, true, true),
-            visible: false
-          },
-          {
-            title: 'firstTime',
-            data: this.renderDateForDCA(parentProperty, false, true, false, true),
-            visible: false
-          }, {
-            title: 'firstTimeSince',
-            data: this.renderDateForDCA(parentProperty, false, true, false, false, true),
-            visible: false
-          },
-          {
             title: 'lastDate',
             data: this.renderDateForDCA(parentProperty, true, false, true),
             visible: false
@@ -271,6 +256,20 @@
             title: 'lastTimeSince',
             data: this.renderDateForDCA(parentProperty, true, false, false, false, true),
             visible: false
+          },
+          {
+            title: 'firstDate',
+            data: this.renderDateForDCA(parentProperty, false, true, true),
+            visible: false
+          },
+          {
+            title: 'firstTime',
+            data: this.renderDateForDCA(parentProperty, false, true, false, true),
+            visible: false
+          }, {
+            title: 'firstTimeSince',
+            data: this.renderDateForDCA(parentProperty, false, true, false, false, true),
+            visible: false
           }
         ];
 
@@ -282,7 +281,7 @@
       },
     },
     mounted() {
-      this.$refs.wrapper.updateColumnHeader(this.currency, [22, 23, 25]);
+      this.$refs.wrapper.updateColumnHeader(this.currency, [23, 24, 26]);
     }
   }
 </script>

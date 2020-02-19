@@ -62,7 +62,7 @@ export default {
    },
    computed: {
     ...mapGetters({
-      properties: "header/getPropertyLogs"
+      properties: 'header/getPropertyLogs'
     })
   },
    mixins: [DOMHelper, DataTableHelper],
@@ -118,11 +118,11 @@ export default {
         const vm = this;
         // To render alert when we click on buy/sell button in datatable.
         // add transalations for text
-        $("body").on(
-          "click",
-          ".buy-or-sell-btn, span[data-pair], .add-buys-record, .add-sales-record",
+        $('body').on(
+          'click',
+          '.buy-or-sell-btn, span[data-pair], .add-buys-record, .add-sales-record',
           event => {
-            if (event.target.classList.contains("add-sales-record") || event.target.classList.contains("add-buys-record")) { 
+            if (event.target.classList.contains('add-sales-record') || event.target.classList.contains('add-buys-record')) { 
               var html = this.getSwalContent(event);
               this.renderBuyorSellModal(event.target.dataset.type,html);
             }
@@ -131,7 +131,7 @@ export default {
               this.renderAlertBox(
                 `Cancle ${event.target.dataset.pair}`,
                 `Are you sure you want to cancel the open order#${event.target.dataset.orderNumber}${event.target.dataset.pair}`,
-                "warning",
+                'warning',
                 `Cancel order #${event.target.dataset.orderNumber}`,
                 `Exit`
               ).then(value => {
@@ -147,11 +147,11 @@ export default {
               });
               return;
             }
-            if (event.target.classList.contains("pending-btn")) {
+            if (event.target.classList.contains('pending-btn')) {
               this.renderAlertBox(
                 `Send ${event.target.dataset.pair} To Pending?`,
                 `Enter a target price for the pair`,
-                "warning",
+                'warning',
                 `Cancel`,
                 `Cancel`,
                 `text`,
@@ -168,14 +168,14 @@ export default {
                 }
               });
             }
-            if (event.target.classList.contains("buy-or-sell-btn")) {
+            if (event.target.classList.contains('buy-or-sell-btn')) {
               let isMarketOrderSupported =
-                typeof this.serverSettings === "undefined"
+                typeof this.serverSettings === 'undefined'
                   ? true
                   : this.serverSettings.isMarketOrderSupported;
               let buyOrSell = event.target.dataset.buyOrSell;
               let testMode =
-                typeof this.serverSettings === "undefined"
+                typeof this.serverSettings === 'undefined'
                   ? true
                   : this.serverSettings.testMode;
               if (isMarketOrderSupported && !testMode) {
@@ -184,10 +184,10 @@ export default {
                     event.target.dataset.pair
                   }?`,
                   `Are you sure you want to ${event.target.dataset.buyOrSell} ${event.target.dataset.pair}?`,
-                  "warning",
+                  'warning',
                   `Cancel ${event.target.dataset.pair}`,
                   `${event.target.dataset.buyOrSell.toUpperCase()}`,
-                  "select"
+                  'select'
                 ).then(result => {
                   var request = {
                     vm: vm,
@@ -206,7 +206,7 @@ export default {
                     event.target.dataset.pair
                   }?`,
                   `Are you sure you want to ${event.target.dataset.buyOrSell} ${event.target.dataset.pair}?`,
-                  "warning",
+                  'warning',
                   `Cancel ${event.target.dataset.pair}`,
                   `${event.target.dataset.buyOrSell.toUpperCase()}`
                 ).then(result => {
@@ -214,7 +214,7 @@ export default {
                     vm: vm,
                     pair: event.target.dataset.pair,
                     buyOrSell: event.target.dataset.buyOrSell,
-                    executionType: "IOC"
+                    executionType: 'IOC'
                   }
 
                   if(result.value){
@@ -223,13 +223,13 @@ export default {
                 });
               }
             }
-            if (event.target.classList.contains("boughtCost-btn")) {
+            if (event.target.classList.contains('boughtCost-btn')) {
               this.renderAlertBox(
                 `${event.target.dataset.boughtcost.toUpperCase()} ${
                   event.target.dataset.pair
                 }`,
                 `You can find the formatting of the bought cost command in our wiki. Check the link in the footer.`,
-                "warning",
+                'warning',
                 `Cancel ${event.target.dataset.pair}`,
                 `${event.target.dataset.boughtcost.toUpperCase()}`,
                 `text`,
@@ -238,7 +238,7 @@ export default {
                 var boughtCost = event.target.dataset.pair + '_bought_price='+result.value
                 var request = {
                   vm: vm,
-                  filename: "HOTCONFIG",
+                  filename: 'HOTCONFIG',
                   fileData: boughtCost,
                   configName: this.properties.activeConfig
                 }
@@ -252,7 +252,7 @@ export default {
               this.renderAlertBox(
                 `Reserve an amount of ${event.target.dataset.pair}`,
                 `Reserve an amount of`,
-                "warning",
+                'warning',
                 `Cancel ${event.target.dataset.pair}`,
                 `Reserve`,
                 `text`,
@@ -308,7 +308,7 @@ export default {
 
      this.dtInstance = null;
      this.options = {};
-     $('body').off('click', '.buy-or-sell-btn');
+     $('body').off('click', '.buy-or-sell-btn, span[data-pair], .add-buys-record, .add-sales-record');
    }
 }
 </script>

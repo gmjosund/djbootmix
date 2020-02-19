@@ -49,6 +49,11 @@
             render: this.renderCombinedMarketCol,
           },
           {
+            title: '24H % Change',
+            data: this.renderPercentageChange,
+            className: 'hide',
+          },
+          {
             title: 'Ask Price',
             data: 'currentPrice',
             className: 'text-right blue-color current-price',

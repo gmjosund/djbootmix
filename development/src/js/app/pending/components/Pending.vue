@@ -53,10 +53,9 @@
             render: this.renderCombinedMarketCol,
           },
           {
-            title: '24H',
-            data: 'market',
-            className: 'hide',
-            render: this.renderPercentageChange
+            title: '24H % Change',
+            data: this.renderPercentageChange,
+            className: 'hide'
           },
           {
             title: 'Sell',
@@ -162,7 +161,7 @@
       this.buttonOptions = [{
         extend: 'excel',
         exportOptions: {
-          columns: this.getExcelColumns(13, [2, 8, 13], [10, 12]),
+          columns: this.getExcelColumns(15, [3, 9, 15], [13, 11]),
           orthogonal: 'export',
         },
         className: 'btn btn-dark',

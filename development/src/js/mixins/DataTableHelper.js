@@ -74,11 +74,14 @@ export default {
       const valueClass = +value < PROFIT_GREEN ? 'loss-classtext' : 'profit-classtext';
       return valueClass;
     },
-    renderPercentageChange(data) {
+    renderPercentageChange(data, type) {
       const percChange = data.percChange * 100;
       // Determining the return value based on the data's type as toFixed() only
       // works with number type.
       const returnValue = isNaN(parseInt(percChange, 10)) ? '' : parseFloat(percChange.toFixed(2)).toFixed(2);
+      if (type === 'export') {
+        return returnValue + ' %';
+      }
       return returnValue;
     },
     /**
