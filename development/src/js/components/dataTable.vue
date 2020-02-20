@@ -24,7 +24,6 @@ import 'datatables.net-bs4/css/dataTables.bootstrap4.css';
 import 'datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css';
 import 'datatables.net-buttons-bs4/css/buttons.bootstrap4.css';
 import 'datatables.net-buttons/js/buttons.html5';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import DataTableHelper from '../mixins/DataTableHelper'
 import DOMHelper from '../mixins/DOMHelper'
 
@@ -52,14 +51,14 @@ export default {
    },
    data() {
       return {
-				isLoaded: false,
+        isLoaded: false,
         dtInstance: null,
         finalOptions: {},
-				options: {},
-				excelButton: {},
+        options: {},
+        excelButton: {},
         buttonOptions: {}
-      }
-   },
+      };
+    },
    computed: {
     ...mapGetters({
       properties: 'header/getPropertyLogs'
@@ -122,10 +121,13 @@ export default {
           'click',
           '.buy-or-sell-btn, span[data-pair], .add-buys-record, .add-sales-record',
           event => {
-            if (event.target.classList.contains('add-sales-record') || event.target.classList.contains('add-buys-record')) { 
-              var html = this.getSwalContent(event);
-              this.renderBuyorSellModal(event.target.dataset.type,html);
-            }
+            if (
+                event.target.classList.contains("add-sales-record") ||
+                event.target.classList.contains("add-buys-record")
+              ) {
+                var html = this.getSwalContent(event);
+                this.renderBuyorSellModal(event.target.dataset.type, html);
+              }
 
             if (event.target.classList.contains("cancel-pending")) {
               this.renderAlertBox(
@@ -147,6 +149,7 @@ export default {
               });
               return;
             }
+            
             if (event.target.classList.contains('pending-btn')) {
               this.renderAlertBox(
                 `Send ${event.target.dataset.pair} To Pending?`,
@@ -168,6 +171,7 @@ export default {
                 }
               });
             }
+
             if (event.target.classList.contains('buy-or-sell-btn')) {
               let isMarketOrderSupported =
                 typeof this.serverSettings === 'undefined'
@@ -178,6 +182,7 @@ export default {
                 typeof this.serverSettings === 'undefined'
                   ? true
                   : this.serverSettings.testMode;
+
               if (isMarketOrderSupported && !testMode) {
                 this.renderAlertBox(
                   `${event.target.dataset.buyOrSell.toUpperCase()} ${
