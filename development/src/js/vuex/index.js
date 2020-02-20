@@ -10,7 +10,7 @@ import possibleBuys from '../app/possibleBuys/vuex'
 import pending from '../app/pending/vuex'
 import apiLogs from '../app/apiLogs/vuex'
 import auth from '../app/auth/vuex'
-import header from '../components/Header/vuex'
+import header from '../components/header/vuex'
 
 
 Vue.use(Vuex)

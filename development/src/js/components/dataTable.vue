@@ -3,7 +3,9 @@
     <button class='float-left btn btn-primary btn-email btn-sm'
      v-bind:class="[tableId === 'salesLogs' ? 'add-sales-record': 'add-buys-record']"
      v-if="tableId ==='salesLogs' || tableId ==='buyLogs'"
-     v-bind:data-type="[tableId === 'salesLogs' ? 'sales': 'buys']">{{tableId ==='salesLogs'? 'Add New Sales Record' : 'Add New Buys Record'}}</button>
+     v-bind:data-type="[tableId === 'salesLogs' ? 'sales': 'buys']">
+      {{tableId ==='salesLogs'? 'Add New Sales Record' : 'Add New Buys Record'}}
+     </button>
    <table class= "table table-striped table-bordered"
     style="width: 100%"
     :id="[tableId]"
@@ -141,15 +143,15 @@ export default {
                   vm: vm,
                   pairName: event.target.dataset.pair,
                   orderNumber: event.target.dataset.orderNumber
-                }
+                };
 
                 if (result.value) {
-                  vm.$store.dispatch('header/cancelPending', request);
+                  vm.$store.dispatch("header/cancelPending", request);
                 }
               });
               return;
             }
-            
+
             if (event.target.classList.contains('pending-btn')) {
               this.renderAlertBox(
                 `Send ${event.target.dataset.pair} To Pending?`,
@@ -280,30 +282,33 @@ export default {
       }
    },
    mounted() {
-     try {
+    try {
       if (this.opts === null) {
         this.options = this.$parent.getDataTableOptions();
       } else {
         this.options = this.opts;
-        }
-      } catch (err) {
-        throw new Error('Please pass options for DataTable either as a property, or via a `getDataTableOptions` method.');
       }
-      this.finalOptions = Vue.util.extend(
+    } catch (err) {
+      throw new Error(
+        'Please pass options for DataTable either as a property, or via a `getDataTableOptions` method.'
+      );
+    }
+    this.finalOptions = Vue.util.extend(
       {
         dom: 'frtipB',
-				paging: false,
+        paging: false,
         pageLength: 25,
         order: [[0, 'desc']],
         searching: false,
         stateSave: true,
-        scrollCollapse: true,
+        scrollCollapse: true
       },
       this.options
     );
     this.updateData(this.tableData);
     this.renderBuySellAlert();
-   },
+  },
+
    beforeDestroy() {
 
      if (this.excelButton){

@@ -402,7 +402,14 @@ export default {
       return function cbhandleAvgValAndCurrentPrice(data, type, row) {
         const avgPrice = that.handleAvgPrice(data, type, row);
         if (type === 'display' || type === 'export') {
-          const currentPrice = that.normalizeValueWithCommas(data.currentPrice, type, '', '', '', that.dtCache.currentMarketPrecision);
+          const currentPrice = that.normalizeValueWithCommas(
+            data.currentPrice,
+            type,
+            '',
+            '',
+            '',
+            that.dtCache.currentMarketPrecision
+          );          
           if (onlyCurrentPrice) {
             return currentPrice;
           }
@@ -434,13 +441,19 @@ export default {
       const that = this;
       return function cbGetCurrentValAndTotalCost(data, type, row) {
         const currentValue = that.getCurrentValue(onlyValue, onlyConvertedValue)(data, type, row);
-        if (type === 'display' || type === 'export') {
-          const totalCost = that.handleTotalCost(onlyValue, onlyConvertedValue)(data, type, row);
-          var targetValue = that.handleTargetValue(onlyValue, onlyConvertedValue)(data, type, row);
+        if (type === "display" || type === "export") {
+          const totalCost = that.handleTotalCost(onlyValue, onlyConvertedValue)(
+            data,
+            type,
+            row
+          );
+          var targetValue = that.handleTargetValue(onlyValue, onlyConvertedValue)(
+            data,
+            type,
+            row
+          );
           if (targetValue) {
-            return (
-              `<span class="bought-cost blue-color">${totalCost}</span><br><span class="current-value blue-color">${currentValue}</span><br><span class="tager-value blue-color">${targetValue}</span>`
-            );
+            return `<span class="bought-cost blue-color">${totalCost}</span><br><span class="current-value blue-color">${currentValue}</span><br><span class="tager-value blue-color">${targetValue}</span>`;
           }
           return `<span class="current-value blue-color">${currentValue}</span><br><span class="bought-cost blue-color">${totalCost}</span>`;
         }
@@ -528,7 +541,14 @@ export default {
       return tempCurrVal;
     },
     getValueBasedOnParams(value, type, onlyCurrentValue, onlyConvertedCurrentValue) {
-      const onlyValue = this.normalizeValueWithCommas(value, type, '', '', '', this.dtCache.currentMarketPrecision);
+      const onlyValue = this.normalizeValueWithCommas(
+        value,
+        type,
+        '',
+        '',
+        '',
+        this.dtCache.currentMarketPrecision
+      );      
       if (onlyCurrentValue) {
         return onlyValue;
       }
@@ -548,7 +568,14 @@ export default {
         this.dtCache.currency === this.BASE_CURRENCY)) {
         return '';
       }
-      tempVal = this.normalizeValueWithCommas(value * this.dtCache.marketPrice * this.dtCache.currencyValue, type, '', '', '', 2);
+      tempVal = this.normalizeValueWithCommas(
+        value * this.dtCache.marketPrice * this.dtCache.currencyValue,
+        type,
+        '',
+        '',
+        '',
+        2
+      );      
       // Returns the value directly if the type of operation is sorting.
       if (type === this.SORT_OP) {
         return tempVal;
@@ -582,7 +609,9 @@ export default {
       return sellStrategy;
     },
     getProfitBTCForSalesLog(row, type) {
-      const profitValueTmp = this.dtCache.getOnlyCurrentValueForSalesLog(row, '') - (this.dtCache.handleOnlyAvgPrice(row, '') * row.soldAmount);
+      const profitValueTmp =
+        this.dtCache.getOnlyCurrentValueForSalesLog(row, '') -
+        this.dtCache.handleOnlyAvgPrice(row, '') * row.soldAmount;
       const profitValue = this.normalizeValueWithCommas(profitValueTmp, type);
       if (type === 'display' || type === 'export' || type === 'filter') {
         const profitClass = this.getClassBasedOnValue(profitValueTmp);
@@ -677,7 +706,15 @@ export default {
             let currentCurrencyValue = this.getInCurrencyValue(response[currentDataKey],
               this.dtCache, 2, true);
             currentCurrencyValue = this.hideCurrencyRow() ? `<span class="current-currency-values"> (${this.dtCache.currencySymbol}${currentCurrencyValue})<span>` : '';
-            response[`${currentDataKey}ConvertedValue`] = this.normalizeValueWithCommas(response[currentDataKey], 'display', '', '', '', currentMarketPrecision) + currentCurrencyValue;
+            response[`${currentDataKey}ConvertedValue`] =
+              this.normalizeValueWithCommas(
+                response[currentDataKey],
+                'display',
+                '',
+                '',
+                '',
+                currentMarketPrecision
+              ) + currentCurrencyValue;
           }
         }
       }
@@ -714,12 +751,22 @@ export default {
     addDifference(firstValue, secondValue, addCurrencyValue) {
       let difference = firstValue - secondValue;
       let diffPerTmp = +secondValue ? (difference / secondValue) * 100 : 0;
-      let diffValue = this.normalizeValueWithCommas(difference, 'display', '', '', '', this.dtCache.currentMarketPrecision);
+      let diffValue = this.normalizeValueWithCommas(
+        difference,
+        'display',
+        '',
+        '',
+        '',
+        this.dtCache.currentMarketPrecision
+      );
+      
       let currentCurrencyValue = '';
       // Appends currency value after computing it with the difference.
       if (addCurrencyValue) {
         currentCurrencyValue = this.getInCurrencyValue(diffValue, this.dtCache, 2, true);
-        currentCurrencyValue = this.hideCurrencyRow() ? `<span class="current-currency-values"> (${this.dtCache.currencySymbol}${currentCurrencyValue})</span>` : '';
+        currentCurrencyValue = this.hideCurrencyRow()
+          ? `<span class="current-currency-values"> (${this.dtCache.currencySymbol}${currentCurrencyValue})</span>`
+          : "";
       }
       let differencePerClass = diffPerTmp < 0 ? NEGATIVE_CLASS_TEXT : POSITIVE_CLASS_TEXT;
       let differencePer = `<span class="${differencePerClass} difference-percent"> (${parseFloat((diffPerTmp).toFixed(2)).toFixed(2)} %) </span>`;

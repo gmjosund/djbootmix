@@ -201,10 +201,10 @@ export default {
       };
       return this.$swal(swalObject);
     },
-    renderBuyorSellModal(title, html){
+    renderBuyorSellModal(title, html) {
       return this.$swal({
         title: `Add new ${title} Record`,
-        icon: "warning",
+        icon: 'warning',
         html: html,
         showCancelButton: true,
         cancelButtonText: 'Cancel',
@@ -212,18 +212,33 @@ export default {
         confirmButtonText: 'AddRecord',
         reverseButtons: true,
         preConfirm: () => {
-          if(title === 'buys') {
-            if (document.getElementById('buyLogCurrencyPair').value && document.getElementById('buyLogAmount').value && document.getElementById('buyLogAvgPrice').value) {
-                var formData= {
-                  'buyLogCurrencyPair': document.getElementById('buyLogCurrencyPair').value,
-                  'buyLogAmount': document.getElementById('buyLogAmount').value,
-                  'buyLogAvgPrice': document.getElementById('buyLogAvgPrice').value
-                };
-                axios.post(THE_BASE_URL + '/action/logBuy?currencyPair=' + formData.buyLogCurrencyPair + '&boughtAmount=' + formData.buyLogAmount + '&boughtPrice=' + formData.buyLogAvgPrice).then(response => { 
+          if (title === 'buys') {
+            if (
+              document.getElementById('buyLogCurrencyPair').value &&
+              document.getElementById('buyLogAmount').value &&
+              document.getElementById('buyLogAvgPrice').value
+            ) {
+              var formData = {
+                buyLogCurrencyPair: document.getElementById('buyLogCurrencyPair')
+                  .value,
+                buyLogAmount: document.getElementById('buyLogAmount').value,
+                buyLogAvgPrice: document.getElementById('buyLogAvgPrice').value
+              };
+              axios
+                .post(
+                  THE_BASE_URL +
+                    '/action/logBuy?currencyPair=' +
+                    formData.buyLogCurrencyPair +
+                    '&boughtAmount=' +
+                    formData.buyLogAmount +
+                    '&boughtPrice=' +
+                    formData.buyLogAvgPrice
+                )
+                .then(response => {
                   this.$swal.fire('Record is Added Sucessfully');
                 })
                 .catch(error => {
-                  if(error.response.status === 304){
+                  if (error.response.status === 304) {
                     this.$swal.fire({
                       title: 'Something went wrong',
                       text: error.response.statusText
@@ -233,23 +248,43 @@ export default {
             } else {
               this.$swal.showValidationMessage('filledProperties');
             }
-        } else {
-            if(document.getElementById('salesLogCurrencyPair').value && document.getElementById('salesLogAmount').value && document.getElementById('salesLogSoldPrice').value && document.getElementById('salesLogAvgPrice').value) {
-              var formData= {
-                'salesLogCurrencyPair': document.getElementById('salesLogCurrencyPair').value,
-                'salesLogAmount': document.getElementById('salesLogAmount').value,
-                'salesLogSoldPrice': document.getElementById('salesLogSoldPrice').value,
-                'salesLogAvgPrice': document.getElementById('salesLogAvgPrice').value
+          } else {
+            if (
+              document.getElementById('salesLogCurrencyPair').value &&
+              document.getElementById('salesLogAmount').value &&
+              document.getElementById('salesLogSoldPrice').value &&
+              document.getElementById('salesLogAvgPrice').value
+            ) {
+              var formData = {
+                salesLogCurrencyPair: document.getElementById(
+                  'salesLogCurrencyPair'
+                ).value,
+                salesLogAmount: document.getElementById('salesLogAmount').value,
+                salesLogSoldPrice: document.getElementById('salesLogSoldPrice')
+                  .value,
+                salesLogAvgPrice: document.getElementById('salesLogAvgPrice').value
               };
-              axios.post(THE_BASE_URL + '/action/logSell?currencyPair=' + formData.salesLogCurrencyPair + '&soldAmount=' + formData.salesLogAmount + '&soldPrice=' + formData.salesLogSoldPrice + '&boughtPrice=' + formData.salesLogAvgPrice).then(response => { 
-                this.$swal.fire('Record is Added Sucessfully');
-              })
-              .catch(error => {
-                this.$swal.fire({
-                  title: 'Something went wrong',
-                  text: error.response.statusText
+              axios
+                .post(
+                  THE_BASE_URL +
+                    '/action/logSell?currencyPair=' +
+                    formData.salesLogCurrencyPair +
+                    '&soldAmount=' +
+                    formData.salesLogAmount +
+                    '&soldPrice=' +
+                    formData.salesLogSoldPrice +
+                    '&boughtPrice=' +
+                    formData.salesLogAvgPrice
+                )
+                .then(response => {
+                  this.$swal.fire('Record is Added Sucessfully');
+                })
+                .catch(error => {
+                  this.$swal.fire({
+                    title: 'Something went wrong',
+                    text: error.response.statusText
+                  });
                 });
-              });
             } else {
               this.$swal.showValidationMessage('filledProperties');
             }
@@ -262,52 +297,154 @@ export default {
       let buildButtons = '';
       var stringOpen = 'buy';
       var stringClose = 'sell';
-  
-      if(this.dtCache.exchange.toLowerCase() === 'bitmex') {
-          isBitmex = true;
-          stringOpen = 'open';
-          stringClose = 'close';
+    
+      if (this.dtCache.exchange.toLowerCase() === 'bitmex') {
+        isBitmex = true;
+        stringOpen = 'open';
+        stringClose = 'close';
+      }
+    
+      if (data.logType === 'PBL') {
+        buildButtons += `<span class="badge badge-outline badge badge-light-success buy-or-sell-btn" data-name=${
+          data.logType
+        } data-pair=${
+          data.market
+        } data-buy-or-sell=${stringOpen} style="cursor: pointer;font-size: 12px!important;width: auto;">${stringOpen.toUpperCase()}</span>`;
+        return buildButtons;
+      }
+      if (data.logType === 'PAIRSBACKUP') {
+        if (!isBitmex) {
+          buildButtons +=
+            '<span class="badge badge-outline badge badge-light-success pending-btn" data-name="' +
+            data.logType +
+            '" data-pair="' +
+            data.market +
+            '" data-avg-price="' +
+            data.avgPrice +
+            '" data-pending="pending" style="cursor: pointer;font-size: 12px!important;width: auto;">PENDING</span>';
         }
-  
-      if(data.logType === 'PBL') {
-        buildButtons += `<span class="badge badge-outline badge badge-light-success buy-or-sell-btn" data-name=${data.logType} data-pair=${data.market} data-buy-or-sell=${stringOpen} style="cursor: pointer;font-size: 12px!important;width: auto;">${stringOpen.toUpperCase()}</span>`;
+        buildButtons +=
+          '<span class="badge badge-outline badge-light-danger buy-or-sell-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-buy-or-sell="' +
+          stringClose +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">' +
+          stringClose.toUpperCase() +
+          "</span><br>";
+        buildButtons +=
+          '<span class="badge badge-outline badge-info boughtCost-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.currency +
+          '" data-avg-price="' +
+          data.avgPrice +
+          '" data-boughtCost="boughtCost" style="cursor: pointer;font-size: 12px!important;width:100px;width: auto;">BOUGHT COST</span>';
+        buildButtons +=
+          '<span class="badge badge-outline badge-info reserve-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-amount="' +
+          data.totalAmount +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">RESERVE</span>';
         return buildButtons;
       }
-      if(data.logType === 'PAIRSBACKUP') {
-        if(!isBitmex) {
-          buildButtons += '<span class="badge badge-outline badge badge-light-success pending-btn" data-name="'+data.logType+'" data-pair="'+data.market+'" data-avg-price="'+data.avgPrice+'" data-pending="pending" style="cursor: pointer;font-size: 12px!important;width: auto;">PENDING</span>';
+      if (data.logType === 'DCABACKUP') {
+        buildButtons +=
+          '<span class="badge badge-outline badge badge-light-success buy-or-sell-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-buy-or-sell="' +
+          stringOpen +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">' +
+          stringOpen.toUpperCase() +
+          "</span>";
+    
+        if (!isBitmex) {
+          buildButtons +=
+            '<span class="badge badge-outline badge badge-light-success pending-btn" data-name="' +
+            data.logType +
+            '" data-pair="' +
+            data.market +
+            '" data-avg-price="' +
+            data.avgPrice +
+            '" data-pending="pending" style="cursor: pointer;font-size: 12px!important;width: auto;">PENDING</span>';
         }
-        buildButtons += '<span class="badge badge-outline badge-light-danger buy-or-sell-btn" data-name="'+data.logType+'" data-pair="'+data.market+'" data-buy-or-sell="'+ stringClose +'" style="cursor: pointer;font-size: 12px!important;width: auto;">'+ stringClose.toUpperCase() +'</span><br>';
-        buildButtons += '<span class="badge badge-outline badge-info boughtCost-btn" data-name="'+data.logType+'" data-pair="'+data.currency+'" data-avg-price="'+data.avgPrice+'" data-boughtCost="boughtCost" style="cursor: pointer;font-size: 12px!important;width:100px;width: auto;">BOUGHT COST</span>';
-        buildButtons += '<span class="badge badge-outline badge-info reserve-btn" data-name="'+data.logType+'" data-pair="'+data.market+'" data-amount="'+data.totalAmount+'" style="cursor: pointer;font-size: 12px!important;width: auto;">RESERVE</span>';
+        buildButtons +=
+          '<span class="badge badge-outline badge-light-danger buy-or-sell-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-buy-or-sell="' +
+          stringClose +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">' +
+          stringClose.toUpperCase() +
+          "</span><br>";
+        buildButtons +=
+          '<span class="badge badge-outline badge-info boughtCost-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.currency +
+          '" data-avg-price="' +
+          data.avgPrice +
+          '" data-boughtCost="boughtCost" style="cursor: pointer;font-size: 12px!important; width: auto;;">BOUGHT COST</span>';
+        buildButtons +=
+          '<span class="badge badge-outline badge-info reserve-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-amount="' +
+          data.totalAmount +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">RESERVE</span>';
         return buildButtons;
       }
-      if(data.logType === 'DCABACKUP') {
-        buildButtons += '<span class="badge badge-outline badge badge-light-success buy-or-sell-btn" data-name="'+data.logType+'" data-pair="'+data.market+'" data-buy-or-sell="'+ stringOpen +'" style="cursor: pointer;font-size: 12px!important;width: auto;">'+ stringOpen.toUpperCase() +'</span>';
-  
-        if(!isBitmex) {
-          buildButtons += '<span class="badge badge-outline badge badge-light-success pending-btn" data-name="'+data.logType+'" data-pair="'+data.market+'" data-avg-price="'+data.avgPrice+'" data-pending="pending" style="cursor: pointer;font-size: 12px!important;width: auto;">PENDING</span>';
-        }
-        buildButtons += '<span class="badge badge-outline badge-light-danger buy-or-sell-btn" data-name="'+data.logType+'" data-pair="'+data.market+'" data-buy-or-sell="'+ stringClose +'" style="cursor: pointer;font-size: 12px!important;width: auto;">'+ stringClose.toUpperCase() +'</span><br>';
-        buildButtons += '<span class="badge badge-outline badge-info boughtCost-btn" data-name="'+data.logType+'" data-pair="'+data.currency+'" data-avg-price="'+data.avgPrice+'" data-boughtCost="boughtCost" style="cursor: pointer;font-size: 12px!important; width: auto;;">BOUGHT COST</span>';
-        buildButtons += '<span class="badge badge-outline badge-info reserve-btn" data-name="'+data.logType+'" data-pair="'+data.market+'" data-amount="'+data.totalAmount+'" style="cursor: pointer;font-size: 12px!important;width: auto;">RESERVE</span>';
-        return buildButtons;
-  
-      }
-      if(data.logType === 'PENDING') {
-        buildButtons += '<span class="badge badge-outline badge-light-danger buy-or-sell-btn cancel-pending" data-name="'+data.logType+'" data-pair="'+data.market+'" data-order-number="'+data.orderNumber+'" data-buy-or-sell="cancel" style="cursor: pointer;font-size: 12px!important;width: auto;">CANCEL</span>';
+      if (data.logType === 'PENDING') {
+        buildButtons +=
+          '<span class="badge badge-outline badge-light-danger buy-or-sell-btn cancel-pending" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-order-number="' +
+          data.orderNumber +
+          '" data-buy-or-sell="cancel" style="cursor: pointer;font-size: 12px!important;width: auto;">CANCEL</span>';
         return buildButtons;
       }
-      if(data.logType === 'RESERVED') {
-        buildButtons += '<span class="badge badge-outline badge-info release-btn" data-name="'+data.logType+'" data-pair="'+data.market+'" data-amount="'+data.totalAmount+'" style="cursor: pointer;font-size: 12px!important;width: auto;">RELEASE</span>';
+      if (data.logType === 'RESERVED') {
+        buildButtons +=
+          '<span class="badge badge-outline badge-info release-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-amount="' +
+          data.totalAmount +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">RELEASE</span>';
         return buildButtons;
       }
-      if(data.logType === 'DUST') {
-        buildButtons += '<span class="badge badge-outline badge badge-light-success buy-or-sell-btn" data-name="'+data.logType+'" data-pair="'+data.market+'" data-buy-or-sell="'+ stringOpen +'" style="cursor: pointer;font-size: 12px!important;width: auto;">'+ stringOpen.toUpperCase() +'</span>';
+      if (data.logType === 'DUST') {
+        buildButtons +=
+          '<span class="badge badge-outline badge badge-light-success buy-or-sell-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-buy-or-sell="' +
+          stringOpen +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">' +
+          stringOpen.toUpperCase() +
+          "</span>";
         return buildButtons;
       }
-      if(data.logType === 'REVERSAL') {
-        buildButtons += '<span class="badge badge-outline badge badge-light-success cancel-reversal" data-name="'+data.logType+'" data-pair="'+data.market+'" data-position="'+data.id+'" style="cursor: pointer;font-size: 12px!important;width: auto;">CANCEL REVERSAL</span>';
+      if (data.logType === 'REVERSAL') {
+        buildButtons +=
+          '<span class="badge badge-outline badge badge-light-success cancel-reversal" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-position="' +
+          data.id +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">CANCEL REVERSAL</span>';
         return buildButtons;
       }
       return '';
