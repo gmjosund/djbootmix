@@ -185,7 +185,7 @@
     methods: {
       percentageCalculation,
        getDataTableOptions() {
-        // To return options after rendering them.
+        // Need to refactor this part and reduce redundancy.
         const isResponsive = true;
         const fixedColumn = !isResponsive && this.options.fixedColumnsLength ?
           this.options.fixedColumnsLength : 0;
