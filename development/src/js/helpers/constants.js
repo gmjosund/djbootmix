@@ -340,7 +340,7 @@ export const PT_LINKS = {
   },
 };
 
-export const DEFAULT_COMPONENTS_LIST = [
+export const DEFAULT_COMPONENTS = [
   {
     component: 'balance',
     visibility: true

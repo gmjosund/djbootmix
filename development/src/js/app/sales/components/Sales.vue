@@ -10,7 +10,8 @@
             ref="wrapper"
           ></dataTable>
           <TableInfo :amount="salesAmount"
-           :data="sales"></TableInfo>
+           :data="sales"
+          ></TableInfo>
         </b-card>
       </div>
     </div>
@@ -25,7 +26,6 @@
   import axios from 'axios'
   import state from '../vuex/state'
   import TableInfo from './SalesTableInfo'
-  import $ from 'jquery';
   import Store from '../../../vuex/index'
   
 

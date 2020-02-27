@@ -17,7 +17,6 @@
 
 <script>
   import {mapActions, mapGetters } from 'vuex'
-  import $ from 'jquery'
   import dataTable from '../../../components/dataTable'
   import DataTableHelper from '../../../mixins/DataTableHelper'
   import DOMHelper from '../../../mixins/DOMHelper'

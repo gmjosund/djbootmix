@@ -10,7 +10,8 @@
             ref="wrapper"
           ></dataTable>
           <TableInfo :amount="dcaAmount"
-           :data="dca"></TableInfo>
+           :data="dca"
+          ></TableInfo>
         </b-card>
       </div>
     </div>

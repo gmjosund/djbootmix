@@ -286,7 +286,7 @@
                 </h5>
               </div>
               <div class="dropdown-item notify-item"
-                   v-if="items">
+                   v-if="showMsg()">
                   All cards are added.
               </div>
               <div class="dropdown-item notify-item"
@@ -450,7 +450,7 @@
 
 <script>
   import {mapActions, mapGetters } from 'vuex'
-  import { TIMERS, PT_LINKS, API_URLS, BASE_CURRENCY, CURRENCY_SYMBOLS, BASE_CURRENCY_NAME, BASE_CURRENCY_SYMBOL} from '../../../helpers/constants';
+  import { TIMERS, PT_LINKS, API_URLS, BASE_CURRENCY, CURRENCY_SYMBOLS, BASE_CURRENCY_NAME, BASE_CURRENCY_SYMBOL} from '../helpers/constants';
   import axios from 'axios'
   export default {
     created() {
@@ -511,6 +511,13 @@
           }
         }
       },
+      showMsg (){
+        if (this.items && this.items.length === 0){
+          return true;
+        }else {
+          return false;
+        }
+      },
       addComponent(event) {
         var cardToAdd = event.target.id;
         var cardIndex = null;
@@ -530,7 +537,9 @@
           return obj.visibility === false;
         })
       }
-      this.items = removedComponents;
+      if (removedComponents){
+        this.items = removedComponents;
+      }
       this.$root.$on('addComponentsToDropdown',(item) => {
         this.items.push(item);
       });

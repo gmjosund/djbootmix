@@ -25,8 +25,8 @@
         <td class="text-success table-nowrap">
           <span class="full-text">Target Value</span>
         </td>
-        <td class="text-success table-nowrap">{{ pendingCalculations.targetValue }}<span
-          class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{pendingCalculations.targetValue | getValueInCurrentCurrency(getProperties,2)}}<span></span></span></td>
+        <td class="text-success table-nowrap">
+          <span class="value">{{ pendingCalculations.targetValue }}<span class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{pendingCalculations.targetValue | getValueInCurrentCurrency(getProperties,2)}}</span></span></td>
       </tr>
       </tbody>
     </table>

@@ -1,7 +1,7 @@
 import {BASE_CURRENCY, CURRENCY_SYMBOLS, BASE_CURRENCY_NAME, BASE_CURRENCY_SYMBOL} from '../../../helpers/constants';
 
 export const setCurrencies = (state, data) => {
-    state.currencies = data
+  state.currencies = data
 }
 
 export const normalizeAndSetProperties = (state, data) => {
@@ -24,7 +24,7 @@ export const normalizeAndSetProperties = (state, data) => {
 	}
 	var combineData = { ...data, ...state.miscLogs };
 	state.properties = combineData;
-  };
+};
   
 
 export const setMicLogs = (state, data) => {

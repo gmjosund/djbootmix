@@ -16,7 +16,7 @@ export default {
   mixins: [DateTimeHelper],
   computed: {
     dtCache() {
-      var serverData = Store.state.header.properties;
+      let serverData = Store.state.header.properties;
       const tmpData = {
         exchange: serverData.exchange,
         marketingSite: serverData.exchangeUrl,

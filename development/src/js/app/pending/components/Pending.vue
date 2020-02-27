@@ -9,8 +9,9 @@
             v-bind:table-data="pending"
             ref="wrapper"
           ></dataTable>
-           <TableInfo :amount="pendingAmount"
-            :data="pending"></TableInfo>
+          <TableInfo :amount="pendingAmount"
+            :data="pending"
+          ></TableInfo>
         </b-card>
       </div>
     </div>

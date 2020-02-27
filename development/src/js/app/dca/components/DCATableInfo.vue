@@ -25,8 +25,9 @@
         <td class="text-success table-nowrap">
           <span class="full-text">Total Cost</span>
         </td>
-        <td class="text-success table-nowrap">{{ dcaCalculations.totalCost }}<span
-          class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{dcaCalculations.totalCost | getValueInCurrentCurrency(getProperties,2)}}<span></span></span></td>
+        <td class="text-success table-nowrap">
+          <span class="value">{{ dcaCalculations.totalCost }}<span class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{dcaCalculations.totalCost | getValueInCurrentCurrency(getProperties,2)}}</span></span>
+        </td>
       </tr>
       </tbody>
     </table>

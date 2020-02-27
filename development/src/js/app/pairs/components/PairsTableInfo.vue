@@ -25,8 +25,9 @@
         <td class="text-success table-nowrap">
           <span class="full-text">Bought Cost</span>
         </td>
-        <td class="text-success table-nowrap">{{ pairsCalculations.boughtCost }}<span
-          class="current-currency-values">{{pairsCalculations.boughtCost | getValueInCurrentCurrency(getProperties,2) }}<span></span></span></td>
+        <td class="text-success table-nowrap">
+          <span class="value">{{ pairsCalculations.boughtCost }}<span class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{pairsCalculations.boughtCost | getValueInCurrentCurrency(getProperties,2) }}</span></span>
+        </td>
       </tr>
       </tbody>
     </table>

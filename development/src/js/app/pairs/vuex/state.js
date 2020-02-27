@@ -4,6 +4,5 @@ export default {
   calculations: {
     currentValue: 0,
     boughtCost: 0
-  },
-  serverData: []
+  }
 }

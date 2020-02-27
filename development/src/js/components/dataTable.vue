@@ -72,29 +72,31 @@ export default {
         return this.dtInstance.column(colNum).data().sum();
       },
       updateData(tableData) {
-      	let finalData = tableData;
-      	if (!finalData) {
-         	finalData = [];
+        let finalData = tableData;
+
+        if (!finalData) {
+          finalData = [];
         }
+
         if (this.isLoaded) {
-         this.dtInstance.clear().rows.add(finalData);
-         this.dtInstance.draw(false);
-         this.dtInstance.columns.adjust();
-         this.setDTPagination();
-         return;
-				}
+          this.dtInstance.clear().rows.add(finalData);
+          this.dtInstance.draw(false);
+          this.dtInstance.columns.adjust();
+          this.setDTPagination();
+          return;
+        }
         this.finalOptions.data = finalData;
         // get current pagingation
         // We should select datatable by id for datatable state save functionality.
         this.dtInstance = $(`#${this.tableId}`).DataTable(
-        	Vue.util.extend(
-          	{
-            	columns: this.columns,
-          	},
-          this.finalOptions,
-        	)
+          Vue.util.extend(
+            {
+              columns: this.columns
+            },
+            this.finalOptions
+          )
         );
-         this.isLoaded = true;
+        this.isLoaded = true;
       },
       addButtons(button) {
         this.excelButton = new $.fn.dataTable.Buttons(this.dtInstance, {

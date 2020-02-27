@@ -25,8 +25,8 @@
         <td class="text-success table-nowrap">
           <span class="full-text">Sold value</span>
         </td>
-        <td class="text-success table-nowrap">{{ salesCalculations.boughtCost }}<span
-          class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{salesCalculations.boughtCost | getValueInCurrentCurrency(getProperties,2)}}<span></span></span></td>
+        <td class="text-success table-nowrap">
+          <span class="value">{{ salesCalculations.boughtCost }}<span class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{salesCalculations.boughtCost | getValueInCurrentCurrency(getProperties,2)}}</span></span></td>
       </tr>
       </tbody>
     </table>
@@ -47,7 +47,7 @@
     },
     computed: {
       ...mapGetters({
-				salesCalculations: 'sales/salesCalculations',
+        salesCalculations: 'sales/salesCalculations',
 				getProperties: 'header/getPropertyLogs',
       })
     }

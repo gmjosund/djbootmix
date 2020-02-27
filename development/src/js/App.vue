@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Header from './components/header/component/header'
+import Header from './components/header'
 import Footer from './components/Footer'
 import { TIMERS, PT_LINKS } from './helpers/constants';
 import $ from 'jquery'

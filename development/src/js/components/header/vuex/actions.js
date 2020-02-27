@@ -30,7 +30,7 @@ export const getCurrencyData = ({commit}, currentEpochTime) => {
     if (response.data) {
       localStorage.setItem(currenciesLocalStorageKey,JSON.stringify(response.data));
       localStorage.setItem(currenciesAPICalledTimeLocalStorageKey,currentEpochTime);
-			commit('setCurrencies', response.data);
+      commit('setCurrencies', response.data);
     }
   });
 }
@@ -42,9 +42,9 @@ export const getPropertyLogs = ({commit}) => {
 }
 
 export const getMiscLogs = ({commit}) => {
-	return axios.get(THE_BASE_URL + '/api/v2/data/misc').then((response) => {
-		commit('setMicLogs', response.data)
-	})
+  return axios.get(THE_BASE_URL + '/api/v2/data/misc').then((response) => {
+    commit('setMicLogs', response.data)
+  })
 }
 
 export const buyOrSellPair = ({ commit }, data) => {
