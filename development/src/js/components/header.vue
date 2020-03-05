@@ -453,9 +453,6 @@
   import { TIMERS, PT_LINKS, API_URLS, BASE_CURRENCY, CURRENCY_SYMBOLS, BASE_CURRENCY_NAME, BASE_CURRENCY_SYMBOL} from '../helpers/constants';
   import axios from 'axios'
   export default {
-    created() {
-      
-    },
     data() {
       return {
         items: [],

@@ -33,16 +33,6 @@
       TableInfo  
     },
     mixins: [DOMHelper, DataTableHelper],
-    beforeRouteEnter (to, from, next) { 
-      Promise.all([
-        Store.dispatch('dca/getDcaLog'),
-        Store.dispatch('header/getMiscLogs'),
-        Store.dispatch('header/getCurrencies'),
-        Store.dispatch('header/getPropertyLogs')
-      ]).finally(() => {
-        next();
-      });
-    },
     data() {
       return {
         columns: [
@@ -207,12 +197,12 @@
       }];
     },
     watch: {
-      dca: function dca() {
-        this.$refs.wrapper.updateData(this.dca);
-      },
-      currency: function currency() {
-        this.$refs.wrapper.updateColumnHeader(this.currency, [23, 24, 26]);
-      }
+      // dca: function dca() {
+      //   this.$refs.wrapper.updateData(this.dca);
+      // },
+      // currency: function currency() {
+      //   this.$refs.wrapper.updateColumnHeader(this.currency, [23, 24, 26]);
+      // }
     },
     methods: {
        getDataTableOptions() {
@@ -286,6 +276,9 @@
   }
 </script>
 
-<style scoped>
-
+<style>
+ td.coinpair a,
+ .yellow {
+  color: #FF9900 !important;
+ }
 </style>

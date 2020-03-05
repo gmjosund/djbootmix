@@ -27,16 +27,6 @@
       dataTable,  
     },
     mixins: [DOMHelper, DataTableHelper],
-    beforeRouteEnter (to, from, next) { 
-     Promise.all([
-        Store.dispatch('buys/getBuysLog'),
-        Store.dispatch('header/getMiscLogs'),
-        Store.dispatch('header/getCurrencies'),
-        Store.dispatch('header/getPropertyLogs')
-      ]).finally(() => {
-        next();
-      })
-    },
     data() {
        return {
         columns: [

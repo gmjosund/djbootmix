@@ -394,3 +394,12 @@ export const DEFAULT_COMPONENTS = [
     visibility: true
   }
 ];
+
+export const TABLES_ACTION = {
+  'possible-buys': 'possibleBuys/getPossibleBuysLog',
+  'pairs': 'pairs/getPairsLog',
+  'dca': 'dca/getDcaLog',
+  'pending': 'pending/getPendingLog',
+  'buys': 'buys/getBuysLog',
+  'sales': 'sales/getSalesLog'
+};
