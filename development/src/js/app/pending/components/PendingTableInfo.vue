@@ -8,23 +8,25 @@
           <span class="full-text">Current Value</span>
         </td>
         <td class="text-primary table-nowrap">{{ pendingCalculations.currentValue }}<span
-          class="current-currency-values"> ($0.00)<span></span></span></td>
+          class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{pendingCalculations.currentValue | getValueInCurrentCurrency(getProperties,2)}}<span></span></span></td>
       </tr>
       <tr>
         <td class="text-dark table-nowrap">
           <span class="full-text">Difference</span>
         </td>
-        <td id="pairsLogDifference" class="text-dark table-nowrap">
-          <span class="percentage" :class="percentageCalculation(pendingCalculations.currentValue, pendingCalculations.targetValue) >= '0.00' ? 'text-success' : 'text-danger'"> ({{ percentageCalculation(pendingCalculations.currentValue, pendingCalculations.targetValue) }} %)</span>
-          <span class="value">{{ (pendingCalculations.currentValue - pendingCalculations.targetValue).toFixed(8) }}<span class="current-currency-values"> ($0.00)</span></span>
+        <td id="pairsLogDifference" 
+          class="text-dark table-nowrap">
+          <span class="percentage" 
+            :class="percentageCalculation(pendingCalculations.currentValue, pendingCalculations.targetValue) >= '0.00' ? 'text-success' : 'text-danger'"> ({{ percentageCalculation(pendingCalculations.currentValue, pendingCalculations.targetValue) }} %)</span>
+          <span class="value">{{ (pendingCalculations.currentValue - pendingCalculations.targetValue).toFixed(8) }}<span class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{(pendingCalculations.currentValue - pendingCalculations.targetValue).toFixed(8) | getValueInCurrentCurrency(getProperties,2)}}</span></span>
         </td>
       </tr>
       <tr>
         <td class="text-success table-nowrap">
           <span class="full-text">Target Value</span>
         </td>
-        <td class="text-success table-nowrap">{{ pendingCalculations.targetValue }}<span
-          class="current-currency-values"> ($0.00)<span></span></span></td>
+        <td class="text-success table-nowrap">
+          <span class="value">{{ pendingCalculations.targetValue }}<span class="current-currency-values">{{`${getProperties.currencySymbol}`}}{{pendingCalculations.targetValue | getValueInCurrentCurrency(getProperties,2)}}</span></span></td>
       </tr>
       </tbody>
     </table>
@@ -46,6 +48,7 @@
     computed: {
       ...mapGetters({
         pendingCalculations: 'pending/pendingCalculations',
+        getProperties: 'header/getPropertyLogs',
       })
     }
   }

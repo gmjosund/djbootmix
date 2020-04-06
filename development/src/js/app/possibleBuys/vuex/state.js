@@ -1,4 +1,4 @@
 export default {
   possibleBuys: [],
-  possibleBuysAmount: 0,
+  possibleBuysAmount: 0
 }

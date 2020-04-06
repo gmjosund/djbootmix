@@ -133,25 +133,321 @@ export default {
       }
       return returnObj;
     },
-    renderAlertBox(title, text, icon, cancelBtnText, confirmBtnText) {
+    getSwalContent(event) {
+      let buyOrSell = event.target.dataset.type;
+      let html = '';
+      if(buyOrSell === 'buys') {
+          html =
+              '<div class="form-group text-left">' +
+                  '<label for="buyLogCurrencyPair">Coin</label>' +
+                  '<input type="text" class="form-control" id="buyLogCurrencyPair" name="buyLogCurrencyPair" placeholder="BTC" required>' +
+                  '<small class="form-text text-muted" data-i18n="">Coin needs to follow the same format, as the other coins you see in the different log areas, such as the Possible Buy Log, Pairs log, etc.</small>' +
+              '</div>' +
+              '<div class="form-group text-left">' +
+                  '<label for="buyLogAmount">BoughtAmount</label>' +
+                  '<input type="number" class="form-control" id="buyLogAmount" name="buyLogAmount" placeholder="1000" required>' +
+              '</div>' +
+              '<div class="form-group text-left">' +
+                  '<label for="buyLogAvgPrice">BoughtPrice</label>' +
+                  '<input type="number" class="form-control" id="buyLogAvgPrice" name="buyLogAvgPrice" placeholder="0.00000400" required>' +
+              '</div>';
+      } else {
+          html =
+              '<div class="form-group text-left">' +
+                  '<label for="salesLogCurrencyPair">Coin</label>' +
+                  '<input type="text" id="salesLogCurrencyPair" name="salesLogCurrencyPair" class="form-control" placeholder="BTC">' +
+                  '<small>Coin needs to follow the same format, as the other coins you see in the different logs, such as Possible Buy Log, Pairs Log, etc.</small>' +
+              '</div>' +
+              '<div class="form-group text-left">' +
+                  '<label for="salesLogAmount">SoldAmount</label>' +
+                  '<input type="text" id="salesLogAmount" name="salesLogAmount" placeholder="1000" class="form-control">' +
+              '</div>' +
+              '<div class="form-group text-left">' +
+                  '<label for="salesLogSoldPrice">SoldPrice</label>' +
+                  '<input type="text" id="salesLogSoldPrice" name="salesLogSoldPrice" placeholder="0.00000400" class="form-control">' +
+              '</div>' +
+              '<div class="form-group text-left">' +
+                  '<label for="salesLogAvgPrice">BoughtPrice.colName</label>' +
+                  '<input type="text" id="salesLogAvgPrice" name="salesLogAvgPrice" placeholder="0.00000400" class="form-control">' +
+              '</div>';
+      }
+      return html;
+    },
+    renderAlertBox(title, text, icon, cancelBtnText, confirmBtnText, inputType, value) {
       // To return swal method which will render alert box when called with proper parameters.
-      return swal({
-        title,
-        text,
-        icon,
-        buttons: {
-          cancel: {
-            text: cancelBtnText,
-            visible: true,
-            value: null
-          },
-          confirm: {
-            text: confirmBtnText,
-            visible: true,
-            value: true
+      var swalObject = {
+        title: title,
+        text: text,
+        icon: icon,
+        cancelButtonText: cancelBtnText,
+        showCancelButton: true,
+      };
+      if (inputType && value) {
+          swalObject.input = inputType;
+          swalObject.inputValue = value;
+          swalObject.inputValidator =  (value) => {
+            if (!value) {
+                return '<b>please insert a value</b>';
+            }
+          }
+        };
+
+      if (inputType === 'select') {
+        swalObject.input = 'select',
+        swalObject.inputOptions = {
+          IOC: 'IOC',
+          MARKET: 'MARKET'
+        };
+      };
+      return this.$swal(swalObject);
+    },
+    renderBuyorSellModal(title, html) {
+      return this.$swal({
+        title: `Add new ${title} Record`,
+        icon: 'warning',
+        html: html,
+        showCancelButton: true,
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#DD6B55',
+        confirmButtonText: 'AddRecord',
+        reverseButtons: true,
+        preConfirm: () => {
+          if (title === 'buys') {
+            if (
+              document.getElementById('buyLogCurrencyPair').value &&
+              document.getElementById('buyLogAmount').value &&
+              document.getElementById('buyLogAvgPrice').value
+            ) {
+              var formData = {
+                buyLogCurrencyPair: document.getElementById('buyLogCurrencyPair')
+                  .value,
+                buyLogAmount: document.getElementById('buyLogAmount').value,
+                buyLogAvgPrice: document.getElementById('buyLogAvgPrice').value
+              };
+              axios
+                .post(
+                  THE_BASE_URL +
+                    '/action/logBuy?currencyPair=' +
+                    formData.buyLogCurrencyPair +
+                    '&boughtAmount=' +
+                    formData.buyLogAmount +
+                    '&boughtPrice=' +
+                    formData.buyLogAvgPrice
+                )
+                .then(response => {
+                  this.$swal.fire('Record is Added Sucessfully');
+                })
+                .catch(error => {
+                  if (error.response.status === 304) {
+                    this.$swal.fire({
+                      title: 'Something went wrong',
+                      text: error.response.statusText
+                    });
+                  }
+                });
+            } else {
+              this.$swal.showValidationMessage('filledProperties');
+            }
+          } else {
+            if (
+              document.getElementById('salesLogCurrencyPair').value &&
+              document.getElementById('salesLogAmount').value &&
+              document.getElementById('salesLogSoldPrice').value &&
+              document.getElementById('salesLogAvgPrice').value
+            ) {
+              var formData = {
+                salesLogCurrencyPair: document.getElementById(
+                  'salesLogCurrencyPair'
+                ).value,
+                salesLogAmount: document.getElementById('salesLogAmount').value,
+                salesLogSoldPrice: document.getElementById('salesLogSoldPrice')
+                  .value,
+                salesLogAvgPrice: document.getElementById('salesLogAvgPrice').value
+              };
+              axios
+                .post(
+                  THE_BASE_URL +
+                    '/action/logSell?currencyPair=' +
+                    formData.salesLogCurrencyPair +
+                    '&soldAmount=' +
+                    formData.salesLogAmount +
+                    '&soldPrice=' +
+                    formData.salesLogSoldPrice +
+                    '&boughtPrice=' +
+                    formData.salesLogAvgPrice
+                )
+                .then(response => {
+                  this.$swal.fire('Record is Added Sucessfully');
+                })
+                .catch(error => {
+                  this.$swal.fire({
+                    title: 'Something went wrong',
+                    text: error.response.statusText
+                  });
+                });
+            } else {
+              this.$swal.showValidationMessage('filledProperties');
+            }
           }
         }
       });
+    }, 
+    addActionButtons(data) {
+      let isBitmex = false;
+      let buildButtons = '';
+      var stringOpen = 'buy';
+      var stringClose = 'sell';
+    
+      if (this.dtCache.exchange.toLowerCase() === 'bitmex') {
+        isBitmex = true;
+        stringOpen = 'open';
+        stringClose = 'close';
+      }
+    
+      if (data.logType === 'PBL') {
+        buildButtons += `<span class="badge badge-outline badge badge-light-success buy-or-sell-btn" data-name=${
+          data.logType
+        } data-pair=${
+          data.market
+        } data-buy-or-sell=${stringOpen} style="cursor: pointer;font-size: 12px!important;width: auto;">${stringOpen.toUpperCase()}</span>`;
+        return buildButtons;
+      }
+      if (data.logType === 'PAIRSBACKUP') {
+        if (!isBitmex) {
+          buildButtons +=
+            '<span class="badge badge-outline badge badge-light-success pending-btn" data-name="' +
+            data.logType +
+            '" data-pair="' +
+            data.market +
+            '" data-avg-price="' +
+            data.avgPrice +
+            '" data-pending="pending" style="cursor: pointer;font-size: 12px!important;width: auto;">PENDING</span>';
+        }
+        buildButtons +=
+          '<span class="badge badge-outline badge-light-danger buy-or-sell-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-buy-or-sell="' +
+          stringClose +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">' +
+          stringClose.toUpperCase() +
+          "</span><br>";
+        buildButtons +=
+          '<span class="badge badge-outline badge-info boughtCost-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.currency +
+          '" data-avg-price="' +
+          data.avgPrice +
+          '" data-boughtCost="boughtCost" style="cursor: pointer;font-size: 12px!important;width:100px;width: auto;">BOUGHT COST</span>';
+        buildButtons +=
+          '<span class="badge badge-outline badge-info reserve-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-amount="' +
+          data.totalAmount +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">RESERVE</span>';
+        return buildButtons;
+      }
+      if (data.logType === 'DCABACKUP') {
+        buildButtons +=
+          '<span class="badge badge-outline badge badge-light-success buy-or-sell-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-buy-or-sell="' +
+          stringOpen +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">' +
+          stringOpen.toUpperCase() +
+          "</span>";
+    
+        if (!isBitmex) {
+          buildButtons +=
+            '<span class="badge badge-outline badge badge-light-success pending-btn" data-name="' +
+            data.logType +
+            '" data-pair="' +
+            data.market +
+            '" data-avg-price="' +
+            data.avgPrice +
+            '" data-pending="pending" style="cursor: pointer;font-size: 12px!important;width: auto;">PENDING</span>';
+        }
+        buildButtons +=
+          '<span class="badge badge-outline badge-light-danger buy-or-sell-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-buy-or-sell="' +
+          stringClose +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">' +
+          stringClose.toUpperCase() +
+          "</span><br>";
+        buildButtons +=
+          '<span class="badge badge-outline badge-info boughtCost-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.currency +
+          '" data-avg-price="' +
+          data.avgPrice +
+          '" data-boughtCost="boughtCost" style="cursor: pointer;font-size: 12px!important; width: auto;;">BOUGHT COST</span>';
+        buildButtons +=
+          '<span class="badge badge-outline badge-info reserve-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-amount="' +
+          data.totalAmount +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">RESERVE</span>';
+        return buildButtons;
+      }
+      if (data.logType === 'PENDING') {
+        buildButtons +=
+          '<span class="badge badge-outline badge-light-danger buy-or-sell-btn cancel-pending" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-order-number="' +
+          data.orderNumber +
+          '" data-buy-or-sell="cancel" style="cursor: pointer;font-size: 12px!important;width: auto;">CANCEL</span>';
+        return buildButtons;
+      }
+      if (data.logType === 'RESERVED') {
+        buildButtons +=
+          '<span class="badge badge-outline badge-info release-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-amount="' +
+          data.totalAmount +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">RELEASE</span>';
+        return buildButtons;
+      }
+      if (data.logType === 'DUST') {
+        buildButtons +=
+          '<span class="badge badge-outline badge badge-light-success buy-or-sell-btn" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-buy-or-sell="' +
+          stringOpen +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">' +
+          stringOpen.toUpperCase() +
+          "</span>";
+        return buildButtons;
+      }
+      if (data.logType === 'REVERSAL') {
+        buildButtons +=
+          '<span class="badge badge-outline badge badge-light-success cancel-reversal" data-name="' +
+          data.logType +
+          '" data-pair="' +
+          data.market +
+          '" data-position="' +
+          data.id +
+          '" style="cursor: pointer;font-size: 12px!important;width: auto;">CANCEL REVERSAL</span>';
+        return buildButtons;
+      }
+      return '';
     }
-  },
+  }
 };

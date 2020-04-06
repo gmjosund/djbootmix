@@ -1,222 +1,18 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-12">
+      <div class="col-12 table-responsive">
         <b-card>
-          <b-table
-            striped
-            bordered
-            :items="dca"
-            :fields="fields"
-            show-empty
-            :busy.sync="isBusy"
-            :sort-by.sync="sortBy"
-            :sort-desc.sync="sortDesc"
-          >
-            <template slot="emptyfiltered" slot-scope="scope">
-              <h5 class="text-center">{{ scope.emptyFilteredText }}</h5>
-            </template>
-            <template slot="empty" slot-scope="scope">
-              <h5 class="text-center">{{ scope.emptyText }}</h5>
-            </template>
-
-            <!-- Formatted headers -->
-            <!-- First Bought Date -->
-            <template slot="HEAD_firstBoughtDate" slot-scope="data">
-              <span v-b-tooltip.hover title="First bought date (Time since buy)">{{ data.label }}</span>
-            </template>
-
-            <!-- Coin -->
-            <template slot="HEAD_market" slot-scope="data">
-              <span v-b-tooltip.hover title="Coin Pair">{{ data.label }}</span>
-            </template>
-
-            <!-- Bid Price / Average Price -->
-            <template slot="HEAD_bidAvgPrice" slot-scope="data">
-              <span v-b-tooltip.hover title="Bid Price and Average Price">Bid.Pr<br>Avg.Pr</span>
-            </template>
-
-            <!-- Buy Strategy -->
-            <template slot="HEAD_buyStrategies" slot-scope="data">
-              <span v-b-tooltip.hover title="Buy Strategy">{{ data.label }}</span>
-            </template>
-
-            <!-- Buy Strategy Value -->
-            <template slot="HEAD_strategyBuyValue" slot-scope="data">
-              <span v-b-tooltip.hover title="Buy Strategy Value">{{ data.label }}</span>
-            </template>
-
-            <!-- Buy Strategy Trigger -->
-            <template slot="HEAD_strategyBuyTrigger" slot-scope="data">
-              <span v-b-tooltip.hover title="Buy Strategy Trigger">{{ data.label }}</span>
-            </template>
-
-            <!-- Buy Strategy Limit -->
-            <template slot="HEAD_strategyBuyLimit" slot-scope="data">
-              <span v-b-tooltip.hover title="Buy Strategy Limit">{{ data.label }}</span>
-            </template>
-
-            <!-- Buy Trigger % -->
-            <template slot="HEAD_buyTrigger" slot-scope="data">
-              <span v-b-tooltip.hover title="Buy Trigger">{{ data.label }}</span>
-            </template>
-
-            <!-- Sell Strategy -->
-            <template slot="HEAD_sellStrategies" slot-scope="data">
-              <span v-b-tooltip.hover title="Sell Strategy">{{ data.label }}</span>
-            </template>
-
-            <!-- Sell Strategy Value -->
-            <template slot="HEAD_strategySellValue" slot-scope="data">
-              <span v-b-tooltip.hover title="Sell Strategy Value">{{ data.label }}</span>
-            </template>
-
-            <!-- Sell Strategy Trigger -->
-            <template slot="HEAD_strategySellTrigger" slot-scope="data">
-              <span v-b-tooltip.hover title="Sell Strategy Trigger">{{ data.label }}</span>
-            </template>
-
-            <!-- Profit Percentage -->
-            <template slot="HEAD_profit" slot-scope="data">
-              <span v-b-tooltip.hover title="Profit and Order Book Profit in %">{{ data.label }}</span>
-            </template>
-
-            <!-- Bid Price / Bought Price -->
-            <template slot="HEAD_bidBoughtPrice" slot-scope="data">
-              <span v-b-tooltip.hover title="Bid Price and Bought Price">Bid Price<br>Bought Price</span>
-            </template>
-
-            <!-- Current Value / Bought Cost -->
-            <template slot="HEAD_currentBoughtCost" slot-scope="data">
-              <span v-b-tooltip.hover title="Current Value and Bought Cost">Current Value<br>Bought Cost</span>
-            </template>
-
-            <!-- Fiat -->
-            <template slot="HEAD_fiat" slot-scope="data">
-              <span v-b-tooltip.hover title="Current Value and Total Cost in USD">USD</span>
-            </template>
-
-            <!-- Volume -->
-            <template slot="HEAD_volume" slot-scope="data">
-              <span v-b-tooltip.hover title="Volume">{{ data.label }}</span>
-            </template>
-
-            <!-- Total Amount -->
-            <template slot="HEAD_totalAmount" slot-scope="data">
-              <span v-b-tooltip.hover title="Total Amount">{{ data.label }}</span>
-            </template>
-
-            <!-- Current Value / Total Cost -->
-            <template slot="HEAD_currentTotalCost" slot-scope="data">
-              <span v-b-tooltip.hover title="Current Value and Total Cost">Cur.Val<br>Tot.Cost</span>
-            </template>
-            <!-- End of Formatted headers -->
-
-            <!-- Date -->
-            <template slot="firstBoughtDate" slot-scope="data">
-              {{ data.item.firstBoughtDate }}<br>
-              {{ data.item.lastBoughtDate }}
-            </template>
-
-            <!-- Coin -->
-            <template slot="market" slot-scope="data">
-              <span class="market"><a href="#">{{ data.item.market }}</a></span><br>
-              <span :class="data.item.percChange > 0 ? 'profit-classtext' : 'loss-classtext'">{{ (data.item.percChange * 100).toFixed(2)}} %</span>
-            </template>
-
-            <!-- Bid Price / Avg. Price -->
-            <template slot="bidAvgPrice" slot-scope="data">
-              <span>{{ data.item.currentPrice.toFixed(8) }}</span><br>
-              <span>{{ data.item.avgPrice.toFixed(8) }}</span><br>
-              <span class="badge badge-warning text-dark">{{ data.item.boughtTimes }}</span>
-            </template>
-
-            <!-- Buy Strategies -->
-            <template slot="buyStrategies" slot-scope="data">
-              <span v-for="limit in data.item.buyStrategies" class="buy-strategy">
-                <span v-html="limit.name"></span> <span v-if="limit.positive !== 'false' && limit.positive !== ''" class="tdgreen">({{ limit.positive  }})</span><br>
-              </span>
-              <div class="text-right ml-5">
-                <button class="btn btn-sm btn-outline-success text-white">Buy</button>
-              </div>
-            </template>
-
-            <!-- BSV -->
-            <template slot="strategyBuyValue" slot-scope="data">
-              <span v-for="limit in data.item.buyStrategies">
-                {{ limit.currentValue.toFixed(8) }}<br>
-              </span>
-            </template>
-
-            <!-- BST -->
-            <template slot="strategyBuyTrigger" slot-scope="data">
-              <span v-for="limit in data.item.buyStrategies">
-                {{ limit.entryValueLimit.toFixed(8) }}<br>
-              </span>
-            </template>
-
-            <!-- BSTV -->
-            <template slot="strategyTriggerValue" slot-scope="data">
-              <span v-for="limit in data.item.buyStrategies">
-                {{ limit.triggerValue }}<br>
-              </span>
-            </template>
-
-            <!-- BT% -->
-            <template slot="buyTrigger" slot-scope="data">
-              {{ data.item.buyProfit.toFixed(2) }}
-            </template>
-
-            <!-- Sell Strategies -->
-            <template slot="sellStrategies" slot-scope="data">
-              <span v-for="limit in data.item.sellStrategies" class="sell-strategy">
-                <span v-html="limit.name"></span> <span v-if="limit.positive !== 'false' && limit.positive !== ''" class="tdgreen">({{ limit.positive  }})</span><br>
-              </span>
-              <div class="text-right ml-5">
-                <button class="btn btn-sm btn-outline-danger text-white">Sell</button>
-              </div>
-            </template>
-
-            <!-- SSV -->
-            <template slot="strategySellValue" slot-scope="data">
-              <span v-for="limit in data.item.sellStrategies">
-                {{ limit.currentValue.toFixed(2) }}<br>
-              </span>
-            </template>
-
-            <!-- SST -->
-            <template slot="strategySellTrigger" slot-scope="data">
-              <span v-for="limit in data.item.sellStrategies">
-                {{ limit.entryValue.toFixed(2) }}<br>
-              </span>
-            </template>
-
-            <!-- Profit -->
-            <template slot="profit" slot-scope="data">
-              <span class="mb-1 badge p-2" :class="data.item.profit > 0 ? 'badge-success' : 'badge-danger'">{{ data.item.profit }}</span><br>
-              <span class="badge badge-success p-2" v-if="data.item.orderbookProfit > 0">{{ data.item.orderbookProfit }}</span>
-            </template>
-
-            <!-- Current Value / Total Cost -->
-            <template slot="currentTotalCost" slot-scope="data">
-              <span>{{ data.item.currentValue.toFixed(data.item.pricePrecision) }}</span><br>
-              <span>{{ data.item.totalCost.toFixed(data.item.pricePrecision) }}</span>
-            </template>
-
-            <!-- Fiat -->
-            <template slot="fiat" slot-scope="data">
-              <span>$ {{(data.item.currentValue.toFixed(data.item.pricePrecision) * 5289.96).toFixed(2) }}</span><br>
-              <span>$ {{(data.item.totalCost.toFixed(data.item.pricePrecision) * 5289.96).toFixed(2) }}</span><br>
-            </template>
-
-
-          </b-table>
-
-          <TableInfo :amount="dcaAmount" :data="dca"></TableInfo>
-
+          <dataTable class="table"
+            :tableId="'dtDCALog'"
+            v-bind:columns="columns"
+            v-bind:table-data="dca"
+            ref="wrapper"
+          ></dataTable>
+          <TableInfo :amount="dcaAmount"
+           :data="dca"
+          ></TableInfo>
         </b-card>
-
-
       </div>
     </div>
   </div>
@@ -224,44 +20,265 @@
 
 <script>
   import {mapActions, mapGetters } from 'vuex'
+  import dataTable from '../../../components/dataTable'
+  import Store from '../../../vuex/index'
+  import DOMHelper from '../../../mixins/DOMHelper'
+  import DataTableHelper from '../../../mixins/DataTableHelper'
+  import { percentageCalculation } from '../../../helpers'
   import TableInfo from './DCATableInfo'
 
   export default {
-    components: {TableInfo},
+    components: {
+      dataTable,
+      TableInfo  
+    },
+    mixins: [DOMHelper, DataTableHelper],
     data() {
       return {
-        sortBy: 'profit',
-        sortDesc: true,
-        isBusy: false,
-        fields: [
-          {key: 'firstBoughtDate', label: 'Date', sortable: true},
-          {key: 'market', label: 'Coin', sortable: true},
-          {key: 'bidAvgPrice', class: 'text-right', sortable: true},
-          {key: 'buyStrategies', label: 'Buy', sortable: true},
-          {key: 'strategyBuyValue', label: 'BSV', sortable: true, class: 'text-right'},
-          {key: 'strategyBuyTrigger', label: 'BST', sortable: true, class: 'text-right'},
-          {key: 'strategyTriggerValue', label: 'BSTV', sortable: true, class: 'text-right'},
-          {key: 'buyTrigger', label: 'BT%', sortable: true, class: 'text-center'},
-          {key: 'sellStrategies', label: 'Sell', sortable: true},
-          {key: 'strategySellValue', label: 'SSV', sortable: true, class: 'text-right'},
-          {key: 'strategySellTrigger', label: 'SST', sortable: true, class: 'text-right'},
-          {key: 'profit', label: 'P%', sortable: true, class: 'text-center'},
-          {key: 'volume', label: 'VOL', sortable: true, class: 'text-right'},
-          {key: 'totalAmount', label: 'TAM', sortable: true, class: 'text-right'},
-          {key: 'currentTotalCost', class: 'text-right', sortable: true},
-          {key: 'fiat', label: 'USD', sortable: true, class: 'text-right'},
+        columns: [
+          {
+            title: 'Date',
+            data: this.renderDateForDCA(),
+            responsivePriority: 1,
+            className: 'date'
+          },
+          {
+            title: 'Coin',
+            data: 'market',
+            className: 'coinpair',
+            responsivePriority: 1,
+            render: this.renderCombinedMarketCol
+          },
+          {
+            title: '24H % Change',
+            data: this.renderPercentageChange,
+            className: 'hide',
+          },
+          {
+            title: 'Bid. Price <br> Avg. Price',
+            data: this.handleAvgPriceDcaLog(),
+            responsivePriority: 2,
+            className: 'text-right blue-color avg-price current-price'
+          },
+          {
+            title: 'Cur.Price',
+            data: this.handleAvgPriceDcaLog(true),
+            visible: false
+          },
+          {
+            title: 'Avg.Price',
+            data: this.handleAvgPriceDcaLog(false, true),
+            visible: false
+          },
+          {
+            title: 'Buy',
+            data: this.renderBuyStrategy('buyStrategies', true),
+            responsivePriority: 1,
+            className: 'buy-strategy'
+          },
+          {
+            title: 'BST',
+            data: 'buyStrategies',
+            responsivePriority: 1,
+            render: this.checkAllValAndHandleStratCurVal,
+            className: 'text-right current-value strat-current-val '
+          },
+          {
+            title: 'BSV',
+            data: 'buyStrategies',
+            render: this.checkAllValAndHandleStratEntryVal,
+            responsivePriority: 4,
+            className: 'text-right strat-entry-val'
+          },
+          {
+            title: 'Sell',
+            data: 'sellStrategies',
+            render: this.renderStrategy,
+            responsivePriority: 1,
+            className: 'sell-strategy'
+          },
+          {
+            title: 'SSV',
+            data: 'sellStrategies',
+            render: this.checkAllValAndHandleStratCurVal,
+            responsivePriority: 1,
+            className: 'text-right current-value strat-current-val '
+          },
+          {
+            title: 'SST',
+            data: 'sellStrategies',
+            render: this.checkAllValAndHandleStratEntryVal,
+            rresponsivePriority: 3,
+            className: 'text-right strat-entry-val'
+          },
+          {
+            title: 'P%',
+            data: this.handleOrderBookProfit,
+            responsivePriority: 1,
+            className: 'text-center profit'
+          },
+          {
+            title: 'VOL',
+            data: 'volume',
+            className: 'text-right volume',
+            responsivePriority: 8,
+            render: this.renderVolume
+          },
+          {
+            title: 'TAM',
+            data: this.handleTotalCost(true),
+            responsivePriority: 7,
+            className: 'text-right total-amount'
+          },
+          {
+            title: 'Cur.Val<br>Tot.Cost',
+            data: this.getCurrentValAndTotalCost(true),
+            responsivePriority: 6,
+            className: 'text-right blue-color current-value'
+          },
+          {
+            title: 'Cur.Val<br>Tot.Cost',
+            data: this.getCurrentValue(true),
+            visible: false
+          },
+          {
+            title: '<span class="api-currency"> </span>',
+            data: this.getCurrentValAndTotalCost(false, true),
+            responsivePriority: 5,
+            className: 'text-right blue-color current-value currency-value'
+          },
+          {
+            title: '<span class="api-currency"> </span>',
+            data: this.getCurrentValue(false, true),
+            class: 'hide'
+          },
+          {
+            title: 'TAM',
+            data: this.handleTotalCost(true),
+            className: 'text-right total-cost hide'
+          },
+          {
+            title: '<span class="api-currency"> </span>',
+            data: this.handleTotalCost(false, true),
+            class: 'hide'
+          },
+          {
+            title: 'Actions',
+            data: this.addActionButtons,
+            className: 'text-right'
+          }
         ],
-      }
+        options: {
+          order: [[19, 'desc']],
+          fixedColumnsLength: 8,
+        },
+        buttonOptions: []
+      };
     },
     computed: {
       ...mapGetters({
         dca: 'dca/dcaLog',
-        dcaAmount: 'dca/dcaAmount'
+        dcaAmount: 'dca/dcaAmount',
+        currency: 'header/currency',
       })
+    },
+     beforeMount() {
+      this.columns = this.getExportDateColumnsForDCA(this.columns, 1);
+      this.buttonOptions = [{
+        extend: 'excel',
+        exportOptions: {
+          columns: this.getExcelColumns(27, [0, 9, 21, 23, 27], [12, 24, 26]),
+          orthogonal: 'export',
+        },
+        className: 'btn btn-dark',
+        title: 'dcaLog',
+        filename: 'dca-log-',
+        text: 'Excel',
+      }];
+    },
+    watch: {
+      dca: function dca() {
+        this.$refs.wrapper.updateData(this.dca);
+      },
+      currency: function currency() {
+        this.$refs.wrapper.updateColumnHeader(this.currency, [23, 24, 26]);
+      }
+    },
+    methods: {
+       getDataTableOptions() {
+        const isResponsive = this.isResponsive();
+        const fixedColumn = !isResponsive && this.options.fixedColumnsLength ?
+          this.options.fixedColumnsLength : 0;
+        this.options.responsive = isResponsive;
+        this.options.scrollX = !isResponsive;
+        this.options.fixedColumns = {
+          leftColumns: fixedColumn,
+        };
+        this.options.buttons = this.buttonOptions;
+        return this.options;
+      },
+      renderDateForDCA(parentProperty, onlyLastDate, onlyFirstDate, onlyDate, onlyTime, onlyDiff) {
+        const that = this;
+        return function cbDateHandler(row, type) {
+          if (onlyLastDate) {
+            return that.dateHandler('lastBoughtDate', parentProperty, onlyDate, onlyTime, onlyDiff)(row, type);
+          } else if (onlyFirstDate) {
+            return that.dateHandler('firstBoughtDate', parentProperty, onlyDate, onlyTime, onlyDiff)(row, type);
+          }
+          let date1 = that.dateHandler('lastBoughtDate', parentProperty, onlyDate, onlyTime, onlyDiff)(row, type);
+          let date2 = that.dateHandler('firstBoughtDate', parentProperty, onlyDate, onlyTime, onlyDiff)(row, type);
+          let combinedDate = `${date1}<br><div class="secondary-date-text">${date2}</div>`;
+          return combinedDate;
+        };
+      },
+      getExportDateColumnsForDCA(columns, index, parentProperty) {
+        let exportDateColumns = [
+          {
+            title: 'lastDate',
+            data: this.renderDateForDCA(parentProperty, true, false, true),
+            visible: false
+          },
+          {
+            title: 'lastTime',
+            data: this.renderDateForDCA(parentProperty, true, false, false, true),
+            visible: false
+          }, {
+            title: 'lastTimeSince',
+            data: this.renderDateForDCA(parentProperty, true, false, false, false, true),
+            visible: false
+          },
+          {
+            title: 'firstDate',
+            data: this.renderDateForDCA(parentProperty, false, true, true),
+            visible: false
+          },
+          {
+            title: 'firstTime',
+            data: this.renderDateForDCA(parentProperty, false, true, false, true),
+            visible: false
+          }, {
+            title: 'firstTimeSince',
+            data: this.renderDateForDCA(parentProperty, false, true, false, false, true),
+            visible: false
+          }
+        ];
+
+        for (let i = 0; i < exportDateColumns.length; i += 1) {
+          columns.splice(index + i, 0, exportDateColumns[i]);
+        }
+
+        return columns;
+      },
+    },
+    mounted() {
+      this.$refs.wrapper.updateColumnHeader(this.currency, [23, 24, 26]);
     }
   }
 </script>
 
-<style scoped>
-
+<style>
+ td.coinpair a,
+ .yellow {
+  color: #FF9900 !important;
+ }
 </style>

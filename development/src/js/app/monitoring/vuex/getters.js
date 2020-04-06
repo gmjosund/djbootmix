@@ -1,3 +1,5 @@
+import { DEFAULT_VALUE } from '../../../helpers/constants';
+
 export const currentDateFormat = state => state.currentDateFormat;
 export const misc = (state) => {
   return state.misc
@@ -48,3 +50,14 @@ export const globalMarketCap = (state) => {
 export const globalMarketCapPercentage = (state) => {
   return state.globalMarketCapPercentage
 }
+
+export const getProperties = (state) => {
+  return state.properties
+}
+
+export const currency = state => {
+  if (typeof state.properties === 'undefined' || typeof state.properties.currency === 'undefined') {
+    return DEFAULT_VALUE;
+  }
+  return state.properties.currency;
+};

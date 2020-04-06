@@ -4,6 +4,7 @@ export default {
   cmc: [],
   proStats: [],
   notifications: [],
+  properties: [],
   heartbeats: [],
   misc: [],
   marketTrend: {},

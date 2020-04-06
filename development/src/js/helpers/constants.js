@@ -39,6 +39,8 @@ export const HIDE_PROFIT_MARKET_AND_ESTIMATED_USD = 'USDT';
 export const BASE_CURRENCY = 'USD';
 export const BASE_CURRENCY_SYMBOL = '$';
 export const BASE_CURRENCY_NAME = 'United States Dollar';
+export const BADGE_SUCCESS = 'badge badge-light-success';
+export const BADGE_DANGER = 'badge-light-danger'
 
 // DT helper constants
 export const PROFIT_GREEN = 0;
@@ -338,7 +340,7 @@ export const PT_LINKS = {
   },
 };
 
-export const DEFAULT_COMPONENTS_LIST = [
+export const DEFAULT_COMPONENTS = [
   {
     component: 'balance',
     visibility: true
@@ -392,3 +394,12 @@ export const DEFAULT_COMPONENTS_LIST = [
     visibility: true
   }
 ];
+
+export const TABLES_ACTION = {
+  'possible-buys': 'possibleBuys/getPossibleBuysLog',
+  'pairs': 'pairs/getPairsLog',
+  'dca': 'dca/getDcaLog',
+  'pending': 'pending/getPendingLog',
+  'buys': 'buys/getBuysLog',
+  'sales': 'sales/getSalesLog'
+};

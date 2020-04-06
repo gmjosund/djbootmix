@@ -37,7 +37,7 @@
 </template>
 
 <script>
-  import { DEFAULT_COMPONENTS_LIST } from '../../../helpers/constants'
+  import { DEFAULT_COMPONENTS } from '../../../helpers/constants'
   import VueGridLayout from 'vue-grid-layout'
   import {mapActions, mapGetters } from 'vuex'
   import pairsLog from './PairsLog'
@@ -53,7 +53,6 @@
   import tcv from './TCV'
   import somo from './SOMO'
   import totalMarketCap from './TotalMarketCap'
-  import $ from 'jquery';
   import sparkline from 'sparkline';
 
   export default {
@@ -171,7 +170,7 @@
         var w = 4;
         var rowHeight = 3;
         this.$root.$on('addCardsTOMonitoring', (component, length) => {
-          if (length === DEFAULT_COMPONENTS_LIST.length - 1) {
+          if (length === DEFAULT_COMPONENTS.length - 1) {
             x = 0;
             y = 0;
           }
@@ -285,7 +284,7 @@
       this.colNum = this.getColumns(window.innerWidth);
       this.components = localStorage.getItem('component_list')
         ? JSON.parse(localStorage.getItem('component_list'))
-        : DEFAULT_COMPONENTS_LIST;
+        : DEFAULT_COMPONENTS;
       this.generateLayout();
       this.addCardToLayout();
     },

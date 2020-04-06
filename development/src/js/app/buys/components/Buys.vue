@@ -2,151 +2,14 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-12">
-        <b-card>
-          <b-table
-            striped
-            bordered
-            :items="buys"
-            :fields="fields"
-            :sort-by.sync="sortBy"
-            :sort-desc.sync="sortDesc"
-          >
-
-            <!-- Formatted headers -->
-            <!-- First Bought Date -->
-            <template slot="HEAD_firstBoughtDate" slot-scope="data">
-              <span v-b-tooltip.hover title="First bought date (Time since buy)">{{ data.label }}</span>
-            </template>
-
-            <!-- Coin -->
-            <template slot="HEAD_market" slot-scope="data">
-              <span v-b-tooltip.hover title="Coin Pair">{{ data.label }}</span>
-            </template>
-
-            <!-- Order Number -->
-            <template slot="HEAD_orderNumber" slot-scope="data">
-              <span v-b-tooltip.hover title="Order Number">{{ data.label }}</span>
-            </template>
-
-            <!-- Buy Type -->
-            <template slot="HEAD_type" slot-scope="data">
-              <span v-b-tooltip.hover title="Buy Type">{{ data.label }}</span>
-            </template>
-
-            <!-- Buy -->
-            <template slot="HEAD_buyStrategies" slot-scope="data">
-              <span v-b-tooltip.hover title="Buy">{{ data.label }}</span>
-            </template>
-
-            <!-- Bought Price -->
-            <template slot="HEAD_avgPrice" slot-scope="data">
-              <span v-b-tooltip.hover title="Bought Price">{{ data.label }}</span>
-            </template>
-
-            <!-- Bought Amount -->
-            <template slot="HEAD_totalAmount" slot-scope="data">
-              <span v-b-tooltip.hover title="Bought Amount">{{ data.label }}</span>
-            </template>
-
-            <!-- Bought Cost -->
-            <template slot="HEAD_totalCost" slot-scope="data">
-              <span v-b-tooltip.hover title="Bought Cost">{{ data.label }}</span>
-            </template>
-
-            <!-- Volume -->
-            <template slot="HEAD_volume" slot-scope="data">
-              <span v-b-tooltip.hover title="Volume">{{ data.label }}</span>
-            </template>
-
-            <!-- Buy Strategy Value -->
-            <template slot="HEAD_strategyBuyValue" slot-scope="data">
-              <span v-b-tooltip.hover title="Buy Strategy Value">{{ data.label }}</span>
-            </template>
-
-            <!-- Buy Strategy Trigger -->
-            <template slot="HEAD_strategyBuyTrigger" slot-scope="data">
-              <span v-b-tooltip.hover title="Buy Strategy Trigger">{{ data.label }}</span>
-            </template>
-
-            <!-- Buy Strategy Limit -->
-            <template slot="HEAD_strategyBuyLimit" slot-scope="data">
-              <span v-b-tooltip.hover title="Buy Strategy Limit">{{ data.label }}</span>
-            </template>
-
-
-            <!-- End of Formatted headers -->
-
-            <!-- Date -->
-            <template slot="firstBoughtDate" slot-scope="data">
-              {{ data.item.firstBoughtDate }}
-            </template>
-
-            <!-- Coin -->
-            <template slot="market" slot-scope="data">
-              <span class="market"><a href="#">{{ data.item.market }}</a></span>
-            </template>
-
-            <!-- Order Number -->
-            <template slot="orderNumber" slot-scope="data">
-              {{ data.item.orderNumber }}
-            </template>
-
-            <!-- Buy Type -->
-            <template slot="type" slot-scope="data">
-              <span>{{ data.item.type }}</span> <span class="badge badge-warning text-dark" v-if="data.item.boughtTimes > 0">{{ data.item.boughtTimes }}</span>
-            </template>
-
-            <!-- Buy Strategies -->
-            <template slot="buyStrategies" slot-scope="data">
-              <span v-for="limit in data.item.buyStrategies" class="buy-strategy">
-                <span v-html="limit.name"></span><br>
-              </span>
-            </template>
-
-            <!-- Bought Price -->
-            <template slot="avgPrice" slot-scope="data">
-              <span class="blue-color">{{ data.item.avgPrice.toFixed(8) }}</span>
-            </template>
-
-            <!-- Bought Amount -->
-            <template slot="totalAmount" slot-scope="data">
-              {{ data.item.totalAmount }}
-            </template>
-
-            <!-- Bought Cost -->
-            <template slot="totalCost" slot-scope="data">
-              {{ data.item.totalCost.toFixed(8) }}
-            </template>
-
-            <!-- BSV -->
-            <template slot="strategyBuyValue" slot-scope="data">
-              <span v-for="limit in data.item.buyStrategies" v-if="limit.currentValue !== 0" class="current-value">
-                {{ limit.currentValue.toFixed(limit.decimals) }}<br>
-              </span>
-            </template>
-
-            <!-- BST -->
-            <template slot="strategyBuyTrigger" slot-scope="data">
-              <span v-for="limit in data.item.buyStrategies" v-if="limit.entryValue !== 0" class="buy-value">
-                {{ limit.entryValue.toFixed(limit.decimals) }}<br>
-              </span>
-            </template>
-
-            <!-- BSL -->
-            <template slot="strategyBuyLimit" slot-scope="data">
-              <span v-for="limit in data.item.buyStrategies" v-if="limit.entryValueLimit !== 0">
-                {{ limit.entryValueLimit.toFixed(limit.decimals) }}<br>
-              </span>
-            </template>
-
-
-          </b-table>
-
-          <div role="status" aria-live="polite">Total records: {{ buyAmount }}</div>
-
+        <b-card class="table-responsive">
+          <dataTable class="table"
+            :tableId="'buyLogs'"
+            v-bind:columns="columns"
+            v-bind:table-data="buys"
+            ref="wrapper"
+          ></dataTable>
         </b-card>
-
-
       </div>
     </div>
   </div>
@@ -154,36 +17,160 @@
 
 <script>
   import {mapActions, mapGetters } from 'vuex'
+  import dataTable from '../../../components/dataTable'
+  import DataTableHelper from '../../../mixins/DataTableHelper'
+  import DOMHelper from '../../../mixins/DOMHelper'
+  import Store from '../../../vuex/index'
+
   export default {
+    components: {
+      dataTable,  
+    },
+    mixins: [DOMHelper, DataTableHelper],
     data() {
-      return {
-        sortBy: 'firstBoughtDate',
-        sortDesc: true,
-        fields: [
-          {key: 'firstBoughtDate', label: 'Date', sortable: true},
-          {key: 'market', label: 'Coin', sortable: true},
-          {key: 'orderNumber', label: 'Order Number', sortable: true},
-          {key: 'type', label: 'Buy Type', sortable: true},
-          {key: 'buyStrategies', label: 'Buy', sortable: true},
-          {key: 'avgPrice', label: 'Bought Price', sortable: false, class: 'text-center'},
-          {key: 'totalAmount', label: 'Bought Amount', sortable: true, class: 'text-right'},
-          {key: 'totalCost', label: 'Bought Cost', sortable: true, class: 'text-right'},
-          {key: 'volume', label: 'VOL', sortable: true, class: 'text-right'},
-          {key: 'strategyBuyValue', label: 'BSV', sortable: false, class: 'text-right'},
-          {key: 'strategyBuyTrigger', label: 'BST', sortable: false, class: 'text-right'},
-          {key: 'strategyBuyLimit', label: 'BSL', sortable: false, class: 'text-right'},
-        ]
-      }
+       return {
+        columns: [
+          {
+            title: 'Date',
+            data: this.dateHandler('lastBoughtDate'),
+            responsivePriority: 1,
+            className: 'date'
+          },
+          {
+            title: 'Coin',
+            data: 'market',
+            className: 'market',
+            render: this.renderMarketCol,
+            responsivePriority: 1
+          },
+          {
+            title: 'Order Number',
+            data: 'orderNumber',
+            responsivePriority: 1,
+            render: this.renderDataIfPresent,
+            className: 'order-number'
+          },
+          {
+            title: 'Buy Type',
+            data: 'type',
+            className: 'buy-type',
+            responsivePriority: 3,
+            render: this.renderDataIfPresent
+          },
+          {
+            title: 'Buy',
+            data: 'buyStrategies',
+            responsivePriority: 2,
+            render: this.renderStrategyForBuyLog,
+            className: 'buy-strategy text-right'
+          },
+          {
+            title: 'Bought Price',
+            data: this.handleBoughtPrice(),
+            responsivePriority: 1,
+            className: 'bought-price text-right blue-color'
+          },
+          {
+            title: 'Bought Cost',
+            data: this.handleTotalCost(true),
+            responsivePriority: 1,
+            className: 'text-right'
+          },
+          {
+            title: 'Bought Amount',
+            data: this.handleBuyLogBoughtAmnt,
+            responsivePriority: 1,
+            className: 'text-right'
+          },
+          {
+            title: 'VOL',
+            data: 'volume',
+            className: 'text-right volume',
+            responsivePriority: 4,
+            render: this.renderVolume
+          },
+          {
+            title: 'BSV',
+            data: 'buyStrategies',
+            responsivePriority: 1,
+            className: 'text-right blue-color current-value',
+            render: this.checkAllValAndHandleStratCurVal
+          },
+          {
+            title: 'BST',
+            data: 'buyStrategies',
+            responsivePriority: 1,
+            className: 'text-right buy-value',
+            render: this.checkAllValAndHandleStratEntryVal
+          },
+          {
+            title: 'BSL',
+            data: 'buyStrategies',
+            className: 'text-right',
+            responsivePriority: 1,
+            render: this.handlePBEntryLimit
+          }
+        ],
+        options: {
+          order: [[0, 'desc']],
+          fixedColumnsLength: 5,
+          paging: true,
+          searching: true,
+          dom: 'lfrtipB'
+        },
+        buttonOptions: []
+      };
     },
     computed: {
       ...mapGetters({
         buys: 'buys/buysLog',
         buyAmount: 'buys/buyAmount'
       })
+    },
+     beforeMount() {
+      this.columns = this.getExportDateColumns(this.columns, 1, 'buyDate');
+      this.buttonOptions = [{
+        extend: 'excel',
+        exportOptions: {
+          columns: this.getExcelColumns(15, [0]),
+          orthogonal: 'export',
+        },
+        className: 'btn btn-dark',
+        title: 'buyLog',
+        filename: 'buy-log-',
+        text: 'Excel',
+      }];
+    },
+    watch: {
+      buys: function buys() {
+        this.$refs.wrapper.updateData(this.buys);
+      }
+    },
+    methods: {
+      getDataTableOptions() {
+        const isResponsive = this.isResponsive();
+        const fixedColumn = !isResponsive && this.options.fixedColumnsLength ?
+          this.options.fixedColumnsLength : 0;
+        this.options.responsive = isResponsive;
+        this.options.scrollX = !isResponsive;
+        this.options.fixedColumns = {
+          leftColumns: fixedColumn,
+        };
+        this.options.buttons = this.buttonOptions;
+        this.options.lengthMenu = [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'all']];
+        return this.options;
+      },
     }
   }
 </script>
 
-<style scoped>
-
+<style>
+.dataTables_length {
+  float: right;
+}
+div.dataTables_wrapper div.dataTables_filter {
+  text-align: right;
+  display: inline;
+  float: right;
+}
 </style>

@@ -1,145 +1,17 @@
 <template>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-12">
+      <div class="col-12 table-responsive">
         <b-card>
-          <b-table
-            striped
-            bordered
-            :items="pairs"
-            :fields="fields"
-            :sort-by.sync="sortBy"
-            :sort-desc.sync="sortDesc"
-          >
-
-            <!-- Formatted headers -->
-            <template slot="emptyfiltered" slot-scope="scope">
-              <p>{{ scope.emptyFilteredText }}</p>
-            </template>
-            <template slot="empty" slot-scope="scope">
-              <p class="text-center">{{ scope.emptyText }}</p>
-            </template>
-
-            <!-- First Bought Date -->
-            <template slot="HEAD_firstBoughtDate" slot-scope="data">
-              <span v-b-tooltip.hover title="First bought date (Time since buy)">{{ data.label }}</span>
-            </template>
-
-            <!-- Coin -->
-            <template slot="HEAD_market" slot-scope="data">
-              <span v-b-tooltip.hover title="Coin Pair">{{ data.label }}</span>
-            </template>
-
-            <!-- Sell Strategy -->
-            <template slot="HEAD_sellStrategies" slot-scope="data">
-              <span v-b-tooltip.hover title="Sell Strategy">{{ data.label }}</span>
-            </template>
-
-            <!-- Sell Strategy Value -->
-            <template slot="HEAD_strategyValue" slot-scope="data">
-              <span v-b-tooltip.hover title="Sell Strategy Value">{{ data.label }}</span>
-            </template>
-
-            <!-- Sell Strategy Trigger -->
-            <template slot="HEAD_strategyTrigger" slot-scope="data">
-              <span v-b-tooltip.hover title="Sell Strategy Trigger">{{ data.label }}</span>
-            </template>
-
-            <!-- Profit Percentage -->
-            <template slot="HEAD_profit" slot-scope="data">
-              <span v-b-tooltip.hover title="Profit and Order Book Profit in %">{{ data.label }}</span>
-            </template>
-
-            <!-- Bid Price / Bought Price -->
-            <template slot="HEAD_bidBoughtPrice" slot-scope="data">
-              <span v-b-tooltip.hover title="Bid Price and Bought Price">Bid Price<br>Bought Price</span>
-            </template>
-
-            <!-- Current Value / Bought Cost -->
-            <template slot="HEAD_currentBoughtCost" slot-scope="data">
-              <span v-b-tooltip.hover title="Current Value and Bought Cost">Current Value<br>Bought Cost</span>
-            </template>
-
-            <!-- Fiat -->
-            <template slot="HEAD_fiat" slot-scope="data">
-              <span v-b-tooltip.hover title="Current Value and Bought Cost in USD">USD</span>
-            </template>
-
-            <!-- Volume -->
-            <template slot="HEAD_volume" slot-scope="data">
-              <span v-b-tooltip.hover title="Volume">{{ data.label }}</span>
-            </template>
-
-            <!-- Total Amount -->
-            <template slot="HEAD_totalAmount" slot-scope="data">
-              <span v-b-tooltip.hover title="Total Amount">{{ data.label }}</span>
-            </template>
-            <!-- End of Formatted headers -->
-
-            <!-- First Bought Date -->
-            <template slot="firstBoughtDate" slot-scope="data">
-              {{ data.item.firstBoughtDate }}
-            </template>
-
-            <!-- Coin -->
-            <template slot="market" slot-scope="data">
-              <span class="market"><a href="#">{{ data.item.market }}</a></span><br>
-              <span :class="data.item.percChange > 0 ? 'profit-classtext' : 'loss-classtext'">{{ (data.item.percChange * 100).toFixed(2)}} %</span>
-            </template>
-
-            <!-- Sell Strategies -->
-            <template slot="sellStrategies" slot-scope="data">
-              <span v-for="limit in data.item.sellStrategies" class="sell-strategy">
-                <span v-html="limit.name"></span> <span v-if="limit.positive !== 'false' && limit.positive !== ''" class="tdgreen">({{ limit.positive  }})</span><br>
-              </span>
-              <div class="text-right ml-5">
-                <button class="btn btn-sm btn-outline-danger text-white">Sell</button>
-              </div>
-            </template>
-
-            <!-- SSV -->
-            <template slot="strategyValue" slot-scope="data">
-              <span v-for="limit in data.item.sellStrategies" class="current-value"
-                    v-if="limit.name !== 'MIN/MAX CHANGE PERC' && limit.name !== 'TOO NEW' && limit.name !== 'MAX SPREAD' && limit.name !== 'ORDERBOOK LOW' && limit.name !== 'SOM ENABLED'">
-                {{ limit.currentValue.toFixed(limit.decimals) }}<br>
-              </span>
-            </template>
-
-            <!-- SST -->
-            <template slot="strategyTrigger" slot-scope="data">
-              <span v-for="limit in data.item.sellStrategies" class="trigger"
-                    v-if="limit.name !== 'MIN/MAX CHANGE PERC' && limit.name !== 'TOO NEW' && limit.name !== 'MAX SPREAD' && limit.name !== 'ORDERBOOK LOW' && limit.name !== 'SOM ENABLED'">
-                {{ limit.entryValue.toFixed(limit.decimals) }}<br>
-              </span>
-            </template>
-
-            <!-- Profit -->
-            <template slot="profit" slot-scope="data">
-              <span class="mb-1 badge" :class="data.item.profit > 0 ? 'badge-success' : 'badge-danger'">{{ data.item.profit.toFixed(2) }}</span><br>
-              <span class="badge badge-success" v-if="data.item.orderbookProfit > 0">{{ data.item.orderbookProfit.toFixed(2) }}</span>
-            </template>
-
-            <!-- Bid Price / Bought Price -->
-            <template slot="bidBoughtPrice" slot-scope="data">
-              <span class="blue-color">{{ data.item.currentPrice.toFixed(data.item.pricePrecision) }}</span><br>
-              <span class="blue-color">{{ data.item.avgPrice.toFixed(data.item.pricePrecision) }}</span>
-            </template>
-
-            <!-- Current Value / Bought Cost -->
-            <template slot="currentBoughtCost" slot-scope="data">
-              <span class="blue-color">{{ currentValue(data.item.currentValue, data.item.pricePrecision, data.item.fee) }}</span><br>
-              <span class="blue-color">{{ data.item.totalCost.toFixed(data.item.pricePrecision) }}</span>
-            </template>
-
-            <!-- Fiat -->
-            <template slot="fiat" slot-scope="data">
-              <span class="blue-color">$ {{(data.item.currentValue.toFixed(data.item.pricePrecision) * 5289.96).toFixed(2) }}</span><br>
-              <span class="blue-color">$ {{(data.item.totalCost.toFixed(data.item.pricePrecision) * 5289.96).toFixed(2) }}</span><br>
-            </template>
-
-          </b-table>
-
-          <TableInfo :amount="pairsAmount" :data="pairs"></TableInfo>
+          <dataTable class="table"
+            :tableId="'dtPairsLog'"
+            v-bind:columns="columns"
+            v-bind:table-data="pairs"
+            ref="wrapper"
+          ></dataTable>
+          <TableInfo :amount="pairsAmount" 
+            :data="pairs"
+          ></TableInfo>
         </b-card>
       </div>
     </div>
@@ -148,42 +20,183 @@
 
 <script>
   import {mapActions, mapGetters } from 'vuex'
+  import dataTable from '../../../components/dataTable'
+  import DOMHelper from '../../../mixins/DOMHelper'
+  import DataTableHelper from '../../../mixins/DataTableHelper'
+  import { percentageCalculation } from '../../../helpers'
   import TableInfo from './PairsTableInfo'
+  import Store from '../../../vuex/index'
+
   export default {
-    components: {TableInfo},
+    components: {
+      dataTable,
+      TableInfo  
+    },
+    mixins: [DOMHelper, DataTableHelper],
     data() {
       return {
-        sortBy: 'profit',
-        sortDesc: true,
-        fields: [
-          {key: 'firstBoughtDate', label: 'Date', sortable: true},
-          {key: 'market', label: 'Coin', sortable: true},
-          {key: 'sellStrategies', label: 'Sell', sortable: true},
-          {key: 'strategyValue', label: 'SSV', sortable: true, class: 'text-right'},
-          {key: 'strategyTrigger', label: 'SST', sortable: true, class: 'text-right'},
-          {key: 'profit', label: 'P%', class: 'text-center', sortable: true},
-          {key: 'bidBoughtPrice', class: 'text-right', sortable: true},
-          {key: 'currentBoughtCost', class: 'text-right', sortable: true},
-          {key: 'fiat', label: 'USD', class: 'text-right', sortable: true},
-          {key: 'volume', label: 'VOL', class: 'text-right', sortable: true},
-          {key: 'totalAmount', label: 'TAM', class: 'text-right', sortable: true},
-        ],
-      }
+        columns: [{
+          title: 'Date',
+          data: this.dateHandler('lastBoughtDate'),
+          className: 'date ',
+          responsivePriority: 1,
+        }, {
+          title: 'Coin',
+          data: 'market',
+          className: 'market',
+          render: this.renderCombinedMarketCol,
+          responsivePriority: 1,
+        }, {
+          title: '24H % Change',
+          data: this.renderPercentageChange,
+          className: 'hide',
+        }, {
+          title: 'Sell',
+          data: this.renderSellStrategyWithButton('sellStrategies', true),
+          className: 'sell-strategy',
+          responsivePriority: 1,
+        }, {
+          title: 'SSV',
+          data: 'sellStrategies',
+          render: this.handleStratCurrentVal,
+          className: 'text-right current-value ',
+          responsivePriority: 1,
+        }, {
+          title: 'SST',
+          data: 'sellStrategies',
+          render: this.handleStratEntryVal,
+          responsivePriority: 1,
+          className: 'text-right trigger',
+        }, {
+          title: 'P%',
+          data: this.handleOrderBookProfit,
+          responsivePriority: 1,
+          className: 'text-center profit',
+        }, {
+          title: 'Bid Price <br> Bought Price',
+          data: this.handleAvgValAndCurrentPrice(),
+          className: 'text-right blue-color current-price',
+          responsivePriority: 1,
+        }, {
+          title: 'currPrice',
+          data: this.handleAvgValAndCurrentPrice(true, false),
+          responsivePriority: 1,
+          className: 'hide',
+        }, {
+          title: 'boughtPrice',
+          data: this.handleAvgValAndCurrentPrice(false, true),
+          responsivePriority: 1,
+          className: 'hide',
+        }, {
+          title: 'Current Value <br> Bought Cost',
+          data: this.getCurrentValAndTotalCost(true),
+          className: 'text-right blue-color current-value',
+          responsivePriority: 1,
+        }, {
+          title: 'Current Value',
+          data: this.getCurrentValue(true),
+          responsivePriority: 1,
+          className: 'hide',
+        }, {
+          title: '<span class="api-currency"></span>',
+          data: this.getCurrentValue(false, true),
+          responsivePriority: 1,
+          className: 'text-right blue-color current-value  hide',
+        }, {
+          title: 'boughtCost',
+          data: this.handleTotalCost(true),
+          responsivePriority: 1,
+          className: 'hide',
+        }, {
+          title: '<span class="api-currency"> </span>',
+          data: this.handleTotalCost(false, true),
+          responsivePriority: 1,
+          className: 'text-right blue-color bought-cost  hide',
+        }, {
+          title: '<span class="api-currency" ></span>',
+          data: this.getCurrentValAndTotalCost(false, true),
+          className: 'text-right bought-cost currency-value',
+          responsivePriority: 3,
+        }, {
+          title: 'VOL',
+          data: 'volume',
+          className: 'text-right volume',
+          responsivePriority: 6,
+          render: this.renderVolume,
+        }, {
+          title: 'TAM',
+          data: this.handleTotalAmount,
+          responsivePriority: 5,
+          className: 'text-right total-amount',
+        },{
+          title: 'Actions',
+          data: this.addActionButtons,
+          className: 'text-right'
+        }],
+        options: {
+          order: [[8, 'desc']],
+          fixedColumnsLength: 5,
+        },
+        buttonOptions: []
+      };
     },
     computed: {
       ...mapGetters({
         pairs: 'pairs/pairsLog',
-        pairsAmount: 'pairs/pairsAmount'
+        pairsAmount: 'pairs/pairsAmount',
+        settings: 'monitoring/settings',
+        misc: 'monitoring/misc',
+        pairsCalculations: 'pairs/pairsCalculations',
+        currency: 'header/currency',
       })
     },
-    methods: {
-      currentValue(value, precision, fee) {
-        return (value - (value * (fee / 100))).toFixed(precision)
+     beforeMount() {
+      this.columns = this.getExportDateColumns(this.columns, 1, 'lastBoughtDate');
+      this.buttonOptions = [{
+        extend: 'excel',
+        exportOptions: {
+          columns: this.getExcelColumns(19, [0, 9, 12, 17], [14, 16]),
+          orthogonal: 'export',
+        },
+        className: 'btn btn-dark',
+        title: 'pairsLog',
+        filename: 'pairs-log',
+        text: 'Excel',
+      }];
+    },
+    watch: {
+      pairs: function pairs() {
+        this.$refs.wrapper.updateData(this.pairs);
+      },
+      currency: function currency() {
+        this.$refs.wrapper.updateColumnHeader(this.currency, [15, 17, 18]);
       }
+    },
+    methods: {
+      percentageCalculation,
+       getDataTableOptions() {
+        // Need to refactor this part and reduce redundancy.
+        const isResponsive = true;
+        const fixedColumn = !isResponsive && this.options.fixedColumnsLength ?
+          this.options.fixedColumnsLength : 0;
+        this.options.responsive = isResponsive;
+        this.options.scrollX = !isResponsive;
+        this.options.fixedColumns = {
+          leftColumns: fixedColumn,
+        };
+        this.options.buttons = this.buttonOptions;
+        this.options.searching = false;
+        return this.options;
+      },
+    },
+    mounted() {
+      this.$refs.wrapper.updateColumnHeader(this.currency, [15, 17, 18]);
     }
   }
 </script>
 
-<style scoped>
-
+<style>
+.hide {
+  display: none !important;
+}
 </style>
