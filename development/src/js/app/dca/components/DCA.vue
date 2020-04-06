@@ -197,12 +197,12 @@
       }];
     },
     watch: {
-      // dca: function dca() {
-      //   this.$refs.wrapper.updateData(this.dca);
-      // },
-      // currency: function currency() {
-      //   this.$refs.wrapper.updateColumnHeader(this.currency, [23, 24, 26]);
-      // }
+      dca: function dca() {
+        this.$refs.wrapper.updateData(this.dca);
+      },
+      currency: function currency() {
+        this.$refs.wrapper.updateColumnHeader(this.currency, [23, 24, 26]);
+      }
     },
     methods: {
        getDataTableOptions() {

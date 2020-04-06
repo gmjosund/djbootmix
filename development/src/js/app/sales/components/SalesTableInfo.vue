@@ -48,7 +48,7 @@
     computed: {
       ...mapGetters({
         salesCalculations: 'sales/salesCalculations',
-				getProperties: 'header/getPropertyLogs',
+        getProperties: 'header/getPropertyLogs'
       })
     }
   }
